@@ -43,10 +43,10 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
               <ul className="space-y-2">
-                <li className="text-gray-600">support@englishtutor.ai</li>
-                <li className="text-gray-600">1-800-123-4567</li>
-                <li className="text-gray-600">123 Learning Street</li>
-                <li className="text-gray-600">San Francisco, CA 94105</li>
+                <li className="text-gray-600">info@english-tutoring.org</li>
+                {/* <li className="text-gray-600">1-800-123-4567</li> */}
+                {/* <li className="text-gray-600">123 Learning Street</li>
+                <li className="text-gray-600">San Francisco, CA 94105</li> */}
               </ul>
             </div>
           </div>

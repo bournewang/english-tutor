@@ -49,11 +49,11 @@ const Contact = () => {
                 </div>
                 <div className="ml-4">
                   <p className="text-lg font-medium text-gray-900">Email</p>
-                  <p className="text-gray-600">support@englishtutor.ai</p>
+                  <p className="text-gray-600">info@english-tutoring.org</p>
                 </div>
               </div>
 
-              <div className="flex items-start">
+              {/* <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -64,7 +64,7 @@ const Contact = () => {
                   <p className="text-lg font-medium text-gray-900">Location</p>
                   <p className="text-gray-600">San Francisco, CA</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex items-start">
                 <div className="flex-shrink-0">

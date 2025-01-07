@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../api/auth';
 import { useUser } from '../context/UserContext';
+import Layout from './Layout';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,6 +31,7 @@ const Login = () => {
   };
 
   return (
+    <Layout>
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       <form onSubmit={handleLogin} className="space-y-4">
@@ -62,6 +64,7 @@ const Login = () => {
         </Link>
       </p>
     </div>
+    </Layout>
   );
 };
 

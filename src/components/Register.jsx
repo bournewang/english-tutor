@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { register } from '../api/auth'; // Assume you have a register function in your API
+import Layout from './Layout';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -30,6 +31,7 @@ const Register = () => {
   };
 
   return (
+    <Layout>
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
       <form onSubmit={handleRegister} className="space-y-4">
@@ -65,6 +67,7 @@ const Register = () => {
         </p>
       </div>
     </div>
+    </Layout>
   );
 };
 

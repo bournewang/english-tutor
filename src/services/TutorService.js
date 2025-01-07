@@ -136,6 +136,10 @@ export class TutorService {
             this.isConnected = true;
             await this.resumeAudioContext();
             console.log('Connected to Gemini 2.0 Flash Multimodal Live API', 'system');
+            
+            setTimeout(() => {
+                this.sendMessage("hello!");
+            }, 1000);
         } catch (error) {
             const errorMessage = error.message || 'Unknown error';
             Logger.error('Connection error:', error);
@@ -206,6 +210,10 @@ export class TutorService {
             this.isRecording = false;
             console.log('Microphone stopped', 'system');
         }
+    }
+
+    sendMessage(message) {
+        this.client.send({ text: message });
     }
 
     async ensureAudioInitialized() {
