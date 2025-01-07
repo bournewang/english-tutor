@@ -15,7 +15,6 @@ const Tutoring = () => {
 // 
   const [searchParams] = useSearchParams();
   let lessonId = searchParams.get('lessonId');
-  console.log("lesson id from query params: ", lessonId);
   const {user} = useUser();
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -25,11 +24,10 @@ const Tutoring = () => {
 
 
   useEffect(() => {
-    console.log("lesson id from query params: ", lessonId);
     if (!lessonId) {
         lessonId = user.current_lesson_id;
-        console.log("lesson id from user: ", lessonId);
     }
+    console.log("lesson id: ", lessonId);
     if (lessonId) {
         getLessonById(lessonId).then(setLesson);
     }

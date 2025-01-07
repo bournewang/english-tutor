@@ -34,7 +34,8 @@ const Header = () => {
                 onMouseEnter={() => setMenuVisible(true)}
             >
                 <div className="flex items-center cursor-pointer">
-                    <FaHome className="mr-2" />
+                    {/* <FaHome className="mr-2" /> */}
+                    <img src="/images/logo.png" alt="Logo" className="h-12 w-auto" />
                     <Link to="/"><span>English Tutoring</span></Link>
                 </div>
             </div>

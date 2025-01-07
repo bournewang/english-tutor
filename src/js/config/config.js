@@ -1,9 +1,9 @@
 export const CONFIG = {
     API: {
-        KEY: 'AIzaSyBxSPeJZz5rUt5pBGmVeykKhbquPVwxBAU',
-        BASE_URL: 'wss://gemini-websocket-proxy.englishreader.org',
-        VERSION: 'v1alpha',
-        MODEL_NAME: 'models/gemini-2.0-flash-exp'
+        KEY: import.meta.env.VITE_GEMINI_API_KEY,
+        BASE_URL: import.meta.env.VITE_GEMINI_BASE_URL,
+        VERSION: import.meta.env.VITE_GEMINI_VERSION,
+        MODEL_NAME: import.meta.env.VITE_GEMINI_MODEL_NAME
     },
     // You can change the system instruction to your liking
     SYSTEM_INSTRUCTION: {
