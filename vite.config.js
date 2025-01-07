@@ -15,4 +15,8 @@ export default defineConfig({
       '@video': path.resolve(__dirname, './src/js/video'),
     },
   },
+  // Optional: Specify a different build output directory
+  build: {
+    outDir: 'dist', // Default is 'dist'
+  },
 })
