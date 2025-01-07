@@ -41,15 +41,15 @@ export class TutorService {
         this.client.on('open', () => {
             console.log('WebSocket connection opened', 'system');
         });
-        
+
         this.client.on('log', (log) => {
             console.log(`${log.type}: ${JSON.stringify(log.message)}`, 'system');
         });
-        
+
         this.client.on('close', (event) => {
             console.log(`WebSocket connection closed (code ${event.code})`, 'system');
         });
-        
+
         this.client.on('audio', async (data) => {
             try {
                 await this.resumeAudioContext();
@@ -59,7 +59,7 @@ export class TutorService {
                 console.log(`Error processing audio: ${error.message}`, 'system');
             }
         });
-        
+
         this.client.on('content', (data) => {
             if (data.modelTurn) {
                 if (data.modelTurn.parts.some(part => part.functionCall)) {
@@ -69,30 +69,30 @@ export class TutorService {
                     this.isUsingTool = false;
                     Logger.info('Tool usage completed');
                 }
-        
+
                 const text = data.modelTurn.parts.map(part => part.text).join('');
                 if (text) {
                     console.log(text, 'ai');
                 }
             }
         });
-        
+
         this.client.on('interrupted', () => {
             this.audioStreamer?.stop();
             this.isUsingTool = false;
             Logger.info('Model interrupted');
             console.log('Model interrupted', 'system');
         });
-        
+
         this.client.on('setupcomplete', () => {
             console.log('Setup complete', 'system');
         });
-        
+
         this.client.on('turncomplete', () => {
             this.isUsingTool = false;
             console.log('Turn complete', 'system');
         });
-        
+
         this.client.on('error', (error) => {
             if (error instanceof ApplicationError) {
                 Logger.error(`Application error: ${error.message}`, error);
@@ -101,14 +101,14 @@ export class TutorService {
             }
             console.log(`Error: ${error.message}`, 'system');
         });
-        
+
         this.client.on('message', (message) => {
             if (message.error) {
                 Logger.error('Server error:', message.error);
                 console.log(`Server error: ${message.error}`, 'system');
             }
         });
-        
+
     }
 
     async connectToWebsocket() {
@@ -117,8 +117,8 @@ export class TutorService {
             generationConfig: {
                 responseModalities: "audio",
                 speechConfig: {
-                    voiceConfig: { 
-                        prebuiltVoiceConfig: { 
+                    voiceConfig: {
+                        prebuiltVoiceConfig: {
                             voiceName: CONFIG.VOICE.NAME
                         }
                     }
@@ -130,16 +130,12 @@ export class TutorService {
                 }],
             }
         };
-    
+
         try {
             await this.client.connect(config);
             this.isConnected = true;
             await this.resumeAudioContext();
             console.log('Connected to Gemini 2.0 Flash Multimodal Live API', 'system');
-            
-            setTimeout(() => {
-                this.sendMessage("hello!");
-            }, 1000);
         } catch (error) {
             const errorMessage = error.message || 'Unknown error';
             Logger.error('Connection error:', error);
@@ -147,7 +143,7 @@ export class TutorService {
             this.isConnected = false;
         }
     }
-    
+
     disconnectFromWebsocket() {
         this.client.disconnect();
         this.isConnected = false;
@@ -160,18 +156,18 @@ export class TutorService {
             this.isRecording = false;
         }
         console.log('Disconnected from server', 'system');
-        
-    }    
 
-    async micOn(){
+    }
+
+    async micOn() {
         try {
             await this.ensureAudioInitialized();
             this.audioRecorder = new AudioRecorder();
-            
+
             const inputAnalyser = this.audioCtx.createAnalyser();
             inputAnalyser.fftSize = 256;
             const inputDataArray = new Uint8Array(inputAnalyser.frequencyBinCount);
-            
+
             await this.audioRecorder.start((base64Data) => {
                 if (this.isUsingTool) {
                     this.client.sendRealtimeInput([{
@@ -185,14 +181,14 @@ export class TutorService {
                         data: base64Data
                     }]);
                 }
-                
+
                 inputAnalyser.getByteFrequencyData(inputDataArray);
             });
 
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const source = this.audioCtx.createMediaStreamSource(stream);
             source.connect(inputAnalyser);
-            
+
             await this.audioStreamer.resume();
             this.isRecording = true;
             Logger.info('Microphone started');
@@ -229,7 +225,9 @@ export class TutorService {
     // }
 
     sendMessage(message) {
-        this.client.send({ text: message });
+        if (this.isConnected) {
+            this.client.send({ text: message });
+        }
     }
 
     async ensureAudioInitialized() {

@@ -12,24 +12,26 @@ const Tutoring = () => {
   const [chatMessages, setChatMessages] = useState([
     // { id: 1, sender: 'Tutor', message: 'Hello! How can I help you today?' },
   ]);
-// 
+  // 
   const [searchParams] = useSearchParams();
   let lessonId = searchParams.get('lessonId');
-  const {user} = useUser();
+  const { user } = useUser();
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [micOn, setMicOn] = useState(false);
   const [lesson, setLesson] = useState(null);
   const [tutorService] = useState(() => new TutorService());
+  // the current slide index
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
 
   useEffect(() => {
     if (!lessonId) {
-        lessonId = user.current_lesson_id;
+      lessonId = user.current_lesson_id;
     }
     console.log("lesson id: ", lessonId);
     if (lessonId) {
-        getLessonById(lessonId).then(setLesson);
+      getLessonById(lessonId).then(setLesson);
     }
   }, [lessonId]);
 
@@ -46,9 +48,29 @@ const Tutoring = () => {
     }
   };
 
+  const sendTagMessage = (tag) => {
+    setNewMessage(tag);
+    handleSend();
+  }
+
   const startHandler = async () => {
     tutorService.connectToWebsocket();
     setIsConnected(true);
+    if (lesson) {
+      setTimeout(() => {
+        let prompt = "In this lesson we will learn " + lesson.course.name + " " + lesson.name + ". "
+          + "Let's follow the lesson plan, Unless I aske to change the topic. "
+          + "When a slide is finished, you can ask me to switch to the next slide. "
+          + "The current slide content is: " + lesson.slides[currentSlideIndex].content + "";
+        if (currentSlideIndex === 0) {
+          prompt += "Now introduce yourself and start the lesson.";
+        } else {
+          prompt += "I just lost the connection a few seconds ago, now continue the lesson.";
+        }
+        console.log("prompt: ", prompt);
+        tutorService.sendMessage(prompt);
+      }, 500);
+    }
   }
 
   const endHandler = () => {
@@ -71,6 +93,32 @@ const Tutoring = () => {
     }
   }
 
+  const handleNextSlide = (index) => {
+    console.log("next slide: ", index);
+    setCurrentSlideIndex(index);
+    const prompt = "just for your reference, I just switched to the next slide, the content is: "
+      + lesson.slides[index].content
+      + ". You don't need to stop your conversation and start a new one, you can continue.";
+    tutorService.sendMessage(prompt);
+  }
+
+  const handlePreviousSlide = (index) => {
+    setCurrentSlideIndex(index);
+    const prompt = "just for your reference, I just switched to the previous slide, the content is: "
+      + lesson.slides[index].content
+      + ". You don't need to stop your conversation and start a new one, you can continue.";
+    tutorService.sendMessage(prompt);
+    console.log("previous slide: ", index);
+  }
+
+  const finishLesson = () => {
+    console.log("finish lesson");
+  }
+
+  const captureScreen = () => {
+    tutorService.captureElementScreenshot('lesson');
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <div className="">
@@ -82,35 +130,41 @@ const Tutoring = () => {
           <div className="flex justify-center items-center mb-4">
             <img src="/images/teacher.jpg" alt="Teacher" className="w-32 h-32 object-cover rounded-full mr-4" />
             <div className="flex flex-col space-y-2">
-            <p className="text-gray-500 text-sm">When you ready, click the start button to continue.</p>
-              {isConnected ? 
-                <button className="bg-red-500 text-white px-4 py-2 rounded w-" onClick={endHandler}>End</button> 
-                : 
+              <p className="text-gray-500 text-sm">When you ready, click the start button to continue.</p>
+              {isConnected ?
+                <button className="bg-red-500 text-white px-4 py-2 rounded w-" onClick={endHandler}>End</button>
+                :
                 <button className="bg-blue-500 text-white px-4 py-2 rounded w-" onClick={startHandler}>Start</button>
               }
               <button className={`px-4 py-2 rounded w- ${micOn ? 'bg-red-500 text-white' : 'bg-gray-300'}`} onClick={micHandler}>
                 {micOn ? 'Mic Off' : 'Mic On'}
               </button>
             </div>
-            
+
           </div>
-          
-          <div className="flex-grow mb-4 overflow-y-auto border-t border-gray-300 rounded-lg p-4">
-            {lesson ? <Lesson lesson={lesson} /> : 
-            <div className='flex justify-center items-center h-full'>
-              {/* <h1 className='text-2xl font-bold'>Free Talk</h1> */}
-            <div className="flex flex-col space-y-4">
-              <p className="">Free talk, or choose a <Link className='text-blue-500' to="/courses">Courses</Link></p>
-              
-            </div>
-            </div>
+
+          {/* add a button to capture the screen */}
+          {/* <button className="bg-blue-500 text-white px-4 py-2 rounded w-1/3" onClick={captureScreen}>Capture Screen</button> */}
+          <div id="lesson" className="flex-grow mb-4 overflow-y-auto border-t border-gray-300 rounded-lg p-4">
+            {lesson ? <Lesson lesson={lesson} onNextSlide={handleNextSlide} onPreviousSlide={handlePreviousSlide} onFinishLesson={finishLesson} /> :
+              <div className='flex justify-center items-center h-full'>
+                {/* <h1 className='text-2xl font-bold'>Free Talk</h1> */}
+                <div className="flex flex-col space-y-4">
+                  <p className="">Free talk, or choose a <Link className='text-blue-500' to="/courses">Courses</Link></p>
+                </div>
+              </div>
             }
           </div>
         </div>
         <div className="w-1/3 h-full ml-4 flex flex-col">
-        {/* I want the char history container can expend by default */}
+          {/* I want the char history container can expend by default */}
           <div className="border bg-white flex-grow overflow-y-scroll" >
             <ChatHistory chatMessages={chatMessages} />
+          </div>
+          <div className="flex justify-center items-center space-x-4 hidden">
+            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a joke')}>Tell a joke</button>
+            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a poem')}>Tell a poem</button>
+            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a song')}>Tell a song</button>
           </div>
           <div className="mt-auto h-16 flex items-center mt-4">
             <input
