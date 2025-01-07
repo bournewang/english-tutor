@@ -57,7 +57,11 @@ const Tutoring = () => {
   }
 
   const micHandler = () => {
-    tutorService.handleMicToggle();
+    if (micOn) {
+      tutorService.micOff();
+    } else {
+      tutorService.micOn();
+    }
     setMicOn(!micOn);
   }
 
@@ -78,7 +82,7 @@ const Tutoring = () => {
           <div className="flex justify-center items-center mb-4">
             <img src="/images/teacher.jpg" alt="Teacher" className="w-32 h-32 object-cover rounded-full mr-4" />
             <div className="flex flex-col space-y-2">
-            {!isConnected && <p className="text-gray-500 text-sm">When you ready, click the start button to continue.</p>} 
+            <p className="text-gray-500 text-sm">When you ready, click the start button to continue.</p>
               {isConnected ? 
                 <button className="bg-red-500 text-white px-4 py-2 rounded w-" onClick={endHandler}>End</button> 
                 : 

@@ -180,7 +180,7 @@ export class MultimodalLiveClient extends EventEmitter {
                     if (b64) {
                         const data = base64ToArrayBuffer(b64);
                         this.emit('audio', data);
-                        this.log(`server.audio`, `buffer (${data.byteLength})`);
+                        // this.log(`server.audio`, `buffer (${data.byteLength})`);
                     }
                 });
 
@@ -224,7 +224,7 @@ export class MultimodalLiveClient extends EventEmitter {
 
         const data = { realtimeInput: { mediaChunks: chunks } };
         this._sendDirect(data);
-        this.log(`client.realtimeInput`, message);
+        // this.log(`client.realtimeInput`, message);
     }
 
     /**

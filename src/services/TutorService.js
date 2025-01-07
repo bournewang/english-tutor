@@ -163,54 +163,70 @@ export class TutorService {
         
     }    
 
-    async handleMicToggle() {
-        if (!this.isRecording) {
-            try {
-                await this.ensureAudioInitialized();
-                this.audioRecorder = new AudioRecorder();
+    async micOn(){
+        try {
+            await this.ensureAudioInitialized();
+            this.audioRecorder = new AudioRecorder();
+            
+            const inputAnalyser = this.audioCtx.createAnalyser();
+            inputAnalyser.fftSize = 256;
+            const inputDataArray = new Uint8Array(inputAnalyser.frequencyBinCount);
+            
+            await this.audioRecorder.start((base64Data) => {
+                if (this.isUsingTool) {
+                    this.client.sendRealtimeInput([{
+                        mimeType: "audio/pcm;rate=16000",
+                        data: base64Data,
+                        interrupt: true     // Model isn't interruptable when using tools, so we do it manually
+                    }]);
+                } else {
+                    this.client.sendRealtimeInput([{
+                        mimeType: "audio/pcm;rate=16000",
+                        data: base64Data
+                    }]);
+                }
                 
-                const inputAnalyser = this.audioCtx.createAnalyser();
-                inputAnalyser.fftSize = 256;
-                const inputDataArray = new Uint8Array(inputAnalyser.frequencyBinCount);
-                
-                await this.audioRecorder.start((base64Data) => {
-                    if (this.isUsingTool) {
-                        this.client.sendRealtimeInput([{
-                            mimeType: "audio/pcm;rate=16000",
-                            data: base64Data,
-                            interrupt: true     // Model isn't interruptable when using tools, so we do it manually
-                        }]);
-                    } else {
-                        this.client.sendRealtimeInput([{
-                            mimeType: "audio/pcm;rate=16000",
-                            data: base64Data
-                        }]);
-                    }
-                    
-                    inputAnalyser.getByteFrequencyData(inputDataArray);
-                });
-    
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const source = this.audioCtx.createMediaStreamSource(stream);
-                source.connect(inputAnalyser);
-                
-                await this.audioStreamer.resume();
-                this.isRecording = true;
-                Logger.info('Microphone started');
-                console.log('Microphone started', 'system');
-            } catch (error) {
-                Logger.error('Microphone error:', error);
-                console.log(`Error: ${error.message}`, 'system');
-                this.isRecording = false;
-            }
-        } else {
-            if (this.audioRecorder && this.isRecording) {
-                this.audioRecorder.stop();
-            }
+                inputAnalyser.getByteFrequencyData(inputDataArray);
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const source = this.audioCtx.createMediaStreamSource(stream);
+            source.connect(inputAnalyser);
+            
+            await this.audioStreamer.resume();
+            this.isRecording = true;
+            Logger.info('Microphone started');
+            console.log('Microphone started', 'system');
+        } catch (error) {
+            Logger.error('Microphone error:', error);
+            console.log(`Error: ${error.message}`, 'system');
             this.isRecording = false;
-            console.log('Microphone stopped', 'system');
         }
     }
+    micOff() {
+        if (this.audioRecorder && this.isRecording) {
+            this.audioRecorder.stop();
+        }
+        this.isRecording = false;
+        console.log('Microphone stopped', 'system');
+
+        // Debugging: Check audio context state
+        if (this.audioCtx) {
+            console.log(`Audio context state: ${this.audioCtx.state}`);
+        }
+
+        // Debugging: Check if audio nodes are connected
+        if (this.audioStreamer) {
+            console.log('Audio streamer is active');
+        }
+    }
+    // async handleMicToggle() {
+    //     if (!this.isRecording) {
+    //         await this.micOn();
+    //     } else {
+    //         this.micOff();
+    //     }
+    // }
 
     sendMessage(message) {
         this.client.send({ text: message });
