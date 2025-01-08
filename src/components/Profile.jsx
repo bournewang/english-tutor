@@ -14,12 +14,10 @@ const ProfilePage = () => {
     age: '',
     english_level: '',
   });
-  console.log(user)
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (user) {
-        console.log(user);
       setFormData({
         email: user.email,
         name: user.name,

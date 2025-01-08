@@ -2,27 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCourses } from '../api/courses';
 import DashboardLayout from './DashboardLayout';
+import { getCourseHistory } from '../api/history';
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [courseCompleted, setCourseCompleted] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadCourses = async () => {
-      try {
-        const data = await getAllCourses();
-        setCourses(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadCourses();
+    loadCourseHistory();
   }, []);
+
+  async function loadCourses(){
+    try {
+      const data = await getAllCourses();
+      setCourses(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };  
+  // get course history
+  async function loadCourseHistory() {
+    const courseHistory = await getCourseHistory();
+    console.log("courseHistory: ", courseHistory);
+    // Correctly use reduce on the courseHistory array
+    const courseMap = courseHistory.reduce((acc, course) => {
+      acc[course.id] = course.completed_at || null; // Assuming you want to map course id to completed_at
+      return acc;
+    }, {});
+    console.log("courseMap: ", courseMap);
+    setCourseCompleted(courseMap);
+  }  
 
   const handleCourseClick = (courseId) => {
     navigate(`/courses/${courseId}`);
@@ -49,6 +64,10 @@ const CoursesPage = () => {
             >
               <h2 className="text-xl font-semibold mb-2">{course.name}</h2>
               <p className="text-gray-700">{course.description}</p>
+              {courseCompleted[course.id] && <p className="text-green-500"> ✅ </p>}
+              {/* if course is not completed, show a running person emoji  */}
+              {courseCompleted[course.id] === null && <p className="text-yellow-500"> ⏳ </p>}
+              {/* {!courseCompleted[course.id] && <p className="text-gray-500"> ❌ </p>} */}
             </li>
           ))}
         </ul>

@@ -30,9 +30,9 @@ const CoursePage = () => {
     loadCourseDetails();
   }, [courseId]);
 
-  const handleUpdateCurrentCourse = async () => {
-    await updateCurrentCourse(courseId);
-    navigate(`/tutoring?lessonId=${course.lessons[0].id}`);
+  const startCourse = async () => {
+    const lesson_id = course.id === user.current_course_id ? course.lessons[user.current_lesson_index].id : course.lessons[0].id;
+    navigate(`/tutoring?lessonId=${lesson_id}`);
   };
 
   if (loading) {
@@ -49,7 +49,7 @@ const CoursePage = () => {
         <h1 className="text-3xl font-bold mb-4">{course.name}</h1>
         <p className="text-gray-700 mb-8">{course.description}</p>
 
-        {user && <button onClick={handleUpdateCurrentCourse} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Start Course</button>}
+        {user && <button onClick={startCourse} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Start Course</button>}
 
         <h2 className="text-2xl font-semibold mb-4">Lessons</h2>
         <ul className="list-disc pl-5">

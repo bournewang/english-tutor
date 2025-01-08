@@ -7,6 +7,7 @@ import Lesson from './Lesson';
 import { TutorService } from '../services/TutorService';
 import { useUser } from '../context/UserContext';
 import { getLessonById } from '../api/lessons.js';
+import { createLessonHistory, createCourseHistory } from '../api/history.js';
 
 const Tutoring = () => {
   const [chatMessages, setChatMessages] = useState([
@@ -15,7 +16,7 @@ const Tutoring = () => {
   // 
   const [searchParams] = useSearchParams();
   let lessonId = searchParams.get('lessonId');
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [micOn, setMicOn] = useState(false);
@@ -54,9 +55,12 @@ const Tutoring = () => {
   }
 
   const startHandler = async () => {
+    console.log("====== startHandler: ", lesson);
     tutorService.connectToWebsocket();
     setIsConnected(true);
+    console.log("start lesson: ", lesson);
     if (lesson) {
+      console.log("send prompt after 500ms ");
       setTimeout(() => {
         let prompt = "In this lesson we will learn " + lesson.course.name + " " + lesson.name + ". "
           + "Let's follow the lesson plan, Unless I aske to change the topic. "
@@ -70,6 +74,21 @@ const Tutoring = () => {
         console.log("prompt: ", prompt);
         tutorService.sendMessage(prompt);
       }, 500);
+
+      // not the last course, create a course history
+      if (user.current_course_id !== lesson.course.id) {
+        setTimeout(() => {
+          const result = createCourseHistory({
+            courseId: lesson.course.id,
+            courseName: lesson.course.name,
+            completedAt: null, // not completed
+          });
+          console.log("result: ", result);
+          if (result.user) {
+            setUser(result.user);
+          }
+        }, 60 * 1000);
+      }
     }
   }
 
@@ -113,6 +132,15 @@ const Tutoring = () => {
 
   const finishLesson = () => {
     console.log("finish lesson");
+    const result = createLessonHistory({
+      courseId: lesson.course.id,
+      courseName: lesson.course.name,
+      lessonId: lesson.id,
+      lessonName: lesson.name,
+    });
+    if (result.user) {
+      setUser(result.user);
+    }
   }
 
   const captureScreen = () => {
