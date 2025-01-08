@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCourseById } from '../api/courses'; // Ensure these functions are correctly named and exported
-// import { getLessonsByCourseId } from '../api/lessons';
+import { getCourseById } from '../api/courses';
 import { updateCurrentCourse } from '../api/user';
+import { getLessonHistoryByCourseId } from '../api/history';
 import DashboardLayout from './DashboardLayout';
 import { useUser } from '../context/UserContext';
 
@@ -10,10 +10,10 @@ const CoursePage = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
-//   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user} = useUser();
+  const [lessonFinished, setLessonFinished] = useState([]);
+  const { user } = useUser();
   
   useEffect(() => {
     const loadCourseDetails = async () => {
@@ -28,10 +28,17 @@ const CoursePage = () => {
     };
 
     loadCourseDetails();
-  }, [courseId]);
 
-  const startCourse = async () => {
-    const lesson_id = course.id === user.current_course_id ? course.lessons[user.current_lesson_index].id : course.lessons[0].id;
+    const loadLessonFinished = async () => {
+      const lessonHistory = await getLessonHistoryByCourseId(courseId);
+      const lessonIds = lessonHistory.map(lesson => lesson.id);
+      setLessonFinished(lessonIds); 
+    };
+
+    loadLessonFinished();
+  }, [courseId]); 
+
+  const startLesson = async (lesson_id) => {
     navigate(`/tutoring?lessonId=${lesson_id}`);
   };
 
@@ -46,17 +53,30 @@ const CoursePage = () => {
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">{course.name}</h1>
-        <p className="text-gray-700 mb-8">{course.description}</p>
+        <h1 className="text-4xl font-bold text-center mb-6">{course.name}</h1>
+        <p className="text-lg text-gray-700 mb-8 text-center">{course.description}</p>
 
-        {user && <button onClick={startCourse} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Start Course</button>}
-
-        <h2 className="text-2xl font-semibold mb-4">Lessons</h2>
-        <ul className="list-disc pl-5">
+        <h2 className="text-3xl font-semibold mb-4">Lessons</h2>
+        <ul className="space-y-4">
           {course.lessons.map((lesson) => (
-            <li key={lesson.id} className="mb-2">
-              <h3 className="text-xl font-semibold">{lesson.name}</h3>
-              <p className="text-gray-600">{lesson.description}</p>
+            <li key={lesson.id} className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-2xl font-semibold">{lesson.name}</h3>
+                  <p className="text-gray-600">{lesson.description}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {lessonFinished.includes(lesson.id) && <span className="text-green-500">✅</span>}
+                  {user && (
+                    <button
+                      onClick={() => startLesson(lesson.id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200"
+                    >
+                      Start Lesson
+                    </button>
+                  )}
+                </div>
+              </div>
             </li>
           ))}
         </ul>

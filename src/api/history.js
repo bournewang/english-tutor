@@ -16,6 +16,14 @@ export const getLessonHistory = async () => {
   return lessonHistory;
 };
 
+// get lesson history by course id
+export const getLessonHistoryByCourseId = async (courseId) => {
+  const lessonHistory = await request(`/api/lesson-history/course_id/${courseId}`, {
+    method: 'GET',
+  });
+  return lessonHistory;
+};
+
 // create course history
 export const createCourseHistory = async (params) => {
   const courseHistory = await request('/api/course-history', {

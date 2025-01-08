@@ -173,15 +173,18 @@ const Tutoring = () => {
 
           {/* add a button to capture the screen */}
           {/* <button className="bg-blue-500 text-white px-4 py-2 rounded w-1/3" onClick={captureScreen}>Capture Screen</button> */}
-          <div id="lesson" className="flex-grow mb-4 overflow-y-auto border-t border-gray-300 rounded-lg p-4">
-            {lesson ? <Lesson lesson={lesson} onNextSlide={handleNextSlide} onPreviousSlide={handlePreviousSlide} onFinishLesson={finishLesson} /> :
+          <div id="lesson" className="h-3/5 flex-grow mb-4 overflow-y-auto border-t border-gray-300 rounded-lg p-4" style={{ maxHeight: '400px' }}>
+            {lesson ? (
+              // <div className='h-full'>
+                <Lesson lesson={lesson} onNextSlide={handleNextSlide} onPreviousSlide={handlePreviousSlide} onFinishLesson={finishLesson} />
+              // </div>
+            ) : (
               <div className='flex justify-center items-center h-full'>
-                {/* <h1 className='text-2xl font-bold'>Free Talk</h1> */}
                 <div className="flex flex-col space-y-4">
                   <p className="">Free talk, or choose a <Link className='text-blue-500' to="/courses">Courses</Link></p>
                 </div>
               </div>
-            }
+            )}
           </div>
         </div>
         <div className="w-1/3 h-full ml-4 flex flex-col">
