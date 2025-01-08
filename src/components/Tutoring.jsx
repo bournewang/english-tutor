@@ -13,6 +13,15 @@ const Tutoring = () => {
   const [chatMessages, setChatMessages] = useState([
     // { id: 1, sender: 'Tutor', message: 'Hello! How can I help you today?' },
   ]);
+  const slides = [
+    // create a series of sample slide with an img from /images/nce-1.jpg
+    { id: 1, title: 'Slide 1', content: "<img src='/images/nce-1.jpg' alt='Slide 1' />" },
+    { id: 2, title: 'Slide 2', content: "<img src='/images/nce-2.jpg' alt='Slide 2' />" },
+    { id: 3, title: 'Slide 3', content: "<img src='/images/nce-3.jpg' alt='Slide 3' />" },
+    { id: 4, title: 'Slide 4', content: "<img src='/images/nce-4.jpg' alt='Slide 4' />" },
+    { id: 5, title: 'Slide 5', content: "<img src='/images/nce-5.jpg' alt='Slide 5' />" },
+    { id: 6, title: 'Slide 6', content: "<img src='/images/nce-6.jpg' alt='Slide 6' />" },
+  ]
   // 
   const [searchParams] = useSearchParams();
   let lessonId = searchParams.get('lessonId');
@@ -31,9 +40,20 @@ const Tutoring = () => {
       lessonId = user.current_lesson_id;
     }
     console.log("lesson id: ", lessonId);
-    if (lessonId) {
-      getLessonById(lessonId).then(setLesson);
+    // create a lesson with the slides
+    const lesson = {
+      id: lessonId,
+      name: "Lesson " + lessonId,
+      course: {
+        id: 1,
+        name: "Course 1",
+      },
+      slides: slides,
     }
+    setLesson(lesson);
+    // if (lessonId) {
+      // getLessonById(lessonId).then(setLesson);
+    // }
   }, [lessonId]);
 
   const handleSend = () => {
@@ -65,14 +85,18 @@ const Tutoring = () => {
         let prompt = "In this lesson we will learn " + lesson.course.name + " " + lesson.name + ". "
           + "Let's follow the lesson plan, Unless I aske to change the topic. "
           + "When a slide is finished, you can ask me to switch to the next slide. "
-          + "The current slide content is: " + lesson.slides[currentSlideIndex].content + "";
-        if (currentSlideIndex === 0) {
-          prompt += "Now introduce yourself and start the lesson.";
-        } else {
-          prompt += "I just lost the connection a few seconds ago, now continue the lesson.";
-        }
+          // + "I will send a screenshot of the current slide to you. "
+        // if (currentSlideIndex === 0) {
+        //   prompt += "Now introduce yourself and start the lesson.";
+        // } else {
+        //   prompt += "I just lost the connection a few seconds ago, now continue the lesson.";
+        // }
         console.log("prompt: ", prompt);
         tutorService.sendMessage(prompt);
+        tutorService.sendScreenshot('lesson-content');
+        prompt = "I just send a screenshot of the current slide to you. Now let's start the lesson. "
+        tutorService.sendMessage(prompt);
+
       }, 500);
 
       // not the last course, create a course history
@@ -115,19 +139,29 @@ const Tutoring = () => {
   const handleNextSlide = (index) => {
     console.log("next slide: ", index);
     setCurrentSlideIndex(index);
-    const prompt = "just for your reference, I just switched to the next slide, the content is: "
-      + lesson.slides[index].content
-      + ". You don't need to stop your conversation and start a new one, you can continue.";
-    tutorService.sendMessage(prompt);
+    // const prompt = "just for your reference, I just switched to the next slide. "
+      // + lesson.slides[index].content
+      // + ". You don't need to stop your conversation and start a new one, you can continue.";
+    // tutorService.sendMessage(prompt);
+    setTimeout(() => {
+      tutorService.sendScreenshot('lesson-content');
+      const prompt = "just for your reference, I just switched to the next slide and sent the content screenshot to you. Once you receive the screenshot, you can continue the lesson. "
+      tutorService.sendMessage(prompt);
+    }, 500);
   }
 
   const handlePreviousSlide = (index) => {
     setCurrentSlideIndex(index);
-    const prompt = "just for your reference, I just switched to the previous slide, the content is: "
-      + lesson.slides[index].content
-      + ". You don't need to stop your conversation and start a new one, you can continue.";
+    // const prompt = "just for your reference, I just switched to the previous slide, I will send the content screenshot to you."
+      // + lesson.slides[index].content
+      // + ". You don't need to stop your conversation and start a new one, you can continue.";
     tutorService.sendMessage(prompt);
     console.log("previous slide: ", index);
+    setTimeout(() => {
+      tutorService.sendScreenshot('lesson-content');
+      const prompt = "just for your reference, I just switched to the previous slide and sent the content screenshot to you.Once you receive the image, you can continue the lesson. "
+      tutorService.sendMessage(prompt);
+    }, 500);
   }
 
   const finishLesson = () => {
@@ -141,10 +175,6 @@ const Tutoring = () => {
     if (result.user) {
       setUser(result.user);
     }
-  }
-
-  const captureScreen = () => {
-    tutorService.captureElementScreenshot('lesson');
   }
 
   return (

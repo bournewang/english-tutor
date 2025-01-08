@@ -6,6 +6,7 @@ import { Logger } from '../js/utils/logger.js';
 // import { VideoManager } from '../js/video/video-manager.js';
 // import { ScreenRecorder } from '../js/video/screen-recorder.js';
 import { ApplicationError } from '../js/utils/error-boundary.js';
+import html2canvas from 'html2canvas';
 
 export class TutorService {
     constructor() {
@@ -214,6 +215,50 @@ export class TutorService {
         // Debugging: Check if audio nodes are connected
         if (this.audioStreamer) {
             console.log('Audio streamer is active');
+        }
+    }
+
+    captureElementScreenshot(elementId) {
+        // const element = document.getElementById(elementId);
+        // if (element) {
+            html2canvas(document.getElementById(elementId)).then(canvas => {
+                // Convert the canvas to a data URL in JPG format
+                const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+
+                // Create a link element to download the image
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'capture.jpg';
+                link.click();
+                
+                return dataURL;
+            });
+        // }
+    }
+    async sendScreenshot(elementId) {
+        if (this.isConnected) {
+            try {
+                const element = document.getElementById(elementId);
+                // get img in the element
+                const img = element.querySelector('img');
+                const canvas = await html2canvas(img);
+                const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+                // Convert base64 to raw binary data
+                const base64Data = dataURL.split(',')[1];
+                
+                this.client.sendRealtimeInput([{
+                    mimeType: "image/jpeg",
+                    data: base64Data,
+                }]);
+
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'capture.jpg';
+                link.click();
+                
+            } catch (error) {
+                console.error('Screenshot error:', error);
+            }
         }
     }
     // async handleMicToggle() {

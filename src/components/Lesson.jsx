@@ -36,7 +36,7 @@ const Lesson = (props) => {
       {/* <h1 className="text-xl font-semibold mb-2">Lesson: {lesson.name}</h1> */}
       <h1 className='bg-blue-200 text-2xl p-2 font-bold mb-2'>Course: {lesson.course.name} / {lesson.name}</h1>
       <h2 className="text-lg font-semiboldp-2 p-2 mb-2">{slides[currentIndex].title}</h2>
-      <div
+      <div id="lesson-content"
         className="flex-grow overflow-y-auto p-2 mb-4" style={{ maxHeight: '300px' }}
         dangerouslySetInnerHTML={{ __html: slides[currentIndex].content }}
       />
