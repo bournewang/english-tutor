@@ -16,12 +16,16 @@ def create_course_material_from_json(file_path):
         course = None
         with open(file_path, 'r', encoding='utf-8') as file:
             json_content = file.read()
+            # print("json_content: ", json_content)
             json_data = json.loads(json_content)
             markdown_contents = json_data['output']
+            # print("markdown_contents: ", markdown_contents)
             for markdown_content in markdown_contents:
                 # Convert Markdown to HTML
                 # Convert Markdown to HTML
                 html_content = markdown.markdown(markdown_content)
+                # print("html_content: ", html_content)
+                # exit(0)
                 
                 # Parse HTML with BeautifulSoup
                 soup = BeautifulSoup(html_content, 'html.parser')
@@ -30,6 +34,10 @@ def create_course_material_from_json(file_path):
                 course_title = h2_tags[0].get_text() if h2_tags[0] else 'No Course Title'
                 lesson_title = h2_tags[1].get_text() if h2_tags[1] else 'No Lesson Title'
                 level = h2_tags[2].get_text() if h2_tags[2] else 'No Level'
+                # print("course_title: ", course_title)
+                # print("lesson_title: ", lesson_title)
+                # print("level: ", level)
+                # exit(0)
                 
                 # Extract <h3> elements and their sibling content
                 slides = []
@@ -45,7 +53,8 @@ def create_course_material_from_json(file_path):
                     })
                 
                 if not course:
-                    course = create_course(course_title + ' - ' + level)
+                    course_name = course_title + ' - ' + level
+                    course = create_course(course_name, level=level)
                     print("create course: ", course)
                 if course:
                     lesson = create_lesson(course.get('id'), lesson_title)
@@ -53,6 +62,7 @@ def create_course_material_from_json(file_path):
                     if lesson:
                         create_slides(lesson.get('id'), slides)
                         print("create slides: ", [slide.get('title') for slide in slides])
+
 
     except FileNotFoundError:
         print(f"File not found: {file_path}")

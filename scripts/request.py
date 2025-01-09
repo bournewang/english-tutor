@@ -1,5 +1,5 @@
 import requests
-
+import urllib.parse
 # define base url
 BASE_URL = 'http://localhost:8787'
 
@@ -8,12 +8,11 @@ def request(path, method='GET', data=None):
     response = requests.request(method, url, json=data)
     return response.json()
 
-def create_course(title, description = None, level_id = None, category_id = None):
+def create_course(title, description = None, level = None, category_id = None):
     return request('/api/courses', 'POST', {
         'name': title,
         'description': description,
-        'level_id': level_id,
-        'category_id': category_id
+        'level': level
     })
 
 def create_lesson(course_id, title, description = None, sort = 0):
@@ -42,7 +41,9 @@ def get_lesson_by_course_id_and_name(course_id, lesson_name):
 
 def get_course_by_name(course_name):
     #  return None if course not found
-    response = request(f'/api/courses/name/{course_name}', 'GET')
+    print("get_course_by_name: ", course_name)
+    response = request(f'/api/courses/name', 'GET', {'name': course_name})
+    print("response: ", response)
     if response is None or response.get('error'):
         return None
     return response
