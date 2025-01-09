@@ -23,6 +23,7 @@ const Tutoring = () => {
   const [lesson, setLesson] = useState(null);
   const [tutorService] = useState(() => new TutorService());
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('lesson');
 
   useEffect(() => {
     const currentLessonId = lessonId || user.current_lesson_id;
@@ -116,99 +117,135 @@ const Tutoring = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Header />
-      <div className="flex-grow flex p-4 bg-gray-100 overflow-y-auto">
-        <div className="w-2/3 flex flex-col">
-          <div className="flex justify-center items-center mb-4 bg-white rounded-lg p-6 shadow-sm">
-            <img 
-              src="/images/teacher.jpg" 
-              alt="Teacher" 
-              className="w-24 h-24 object-cover rounded-full mr-6 border-4 border-blue-100"
-            />
-            <div className="flex flex-col space-y-3">
-              <p className="text-gray-600">
-                {t('tutoring.readyPrompt')}
-              </p>
-              <div className="flex space-x-5">
-                {isConnected ? (
+    <div className="h-screen flex flex-col overflow-hidden">
+      <Header className="flex-shrink-0" />
+      
+      {/* Mobile tabs - fixed height */}
+      <div className="lg:hidden flex border-b bg-white flex-shrink-0">
+        <button
+          onClick={() => setActiveTab('lesson')}
+          className={`flex-1 py-2 px-4 text-sm font-medium ${
+            activeTab === 'lesson' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+          }`}
+        >
+          {t('lesson.title')}
+        </button>
+        <button
+          onClick={() => setActiveTab('chat')}
+          className={`flex-1 py-2 px-4 text-sm font-medium ${
+            activeTab === 'chat' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+          }`}
+        >
+          {t('chat.title')}
+        </button>
+      </div>
+
+      {/* Main content area - take remaining height */}
+      <div className="flex-1 min-h-0"> {/* min-h-0 is crucial here */}
+        <div className="h-full grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 bg-gray-100 overflow-hidden">
+          {/* Left column - Lesson */}
+          <div className={`lg:col-span-2 flex flex-col min-h-0 ${
+            activeTab === 'chat' ? 'hidden lg:flex' : 'flex'
+          }`}>
+            {/* Teacher info - fixed height */}
+            <div className="flex justify-center items-center mb-4 bg-white rounded-lg p-4 sm:p-6 shadow-sm">
+              <img 
+                src="/images/teacher.jpg" 
+                alt="Teacher" 
+                className="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-full mb-4 sm:mb-0 sm:mr-6 border-4 border-blue-100"
+              />
+              <div className="flex flex-col ml-4 space-y-3 text-center sm:text-left">
+                <p className="text-gray-600 text-sm sm:text-base">
+                  {t('tutoring.readyPrompt')}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 sm:space-x-5">
+                  {isConnected ? (
+                    <button 
+                      className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                      onClick={endHandler}
+                    >
+                      <div className="flex items-center justify-center">
+                        {t('tutoring.buttons.end')} <FaStop className="ml-2"/>
+                      </div>
+                    </button>
+                  ) : (
+                    <button 
+                      className=" bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                      onClick={startHandler}
+                    >
+                      <div className="flex items-center justify-center">
+                        {t('tutoring.buttons.start')} <FaPlay className="ml-2"/>
+                      </div>
+                    </button>
+                  )}
                   <button 
-                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
-                    onClick={endHandler}
+                    className={`px-6 py-2 rounded-lg transition-colors duration-200 ${
+                      micOn 
+                        ? 'bg-red-500 hover:bg-red-600 text-white' 
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                    }`}
+                    onClick={micHandler}
                   >
-                    <div className="flex items-center">
-                      {t('tutoring.buttons.end')} <FaStop className="ml-2"/>
+                    <div className="flex items-center justify-center"> 
+                      {t(micOn ? 'tutoring.buttons.micOff' : 'tutoring.buttons.micOn')} <FaMicrophone className="ml-2"/>
                     </div>
                   </button>
-                ) : (
-                  <button 
-                    className=" bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
-                    onClick={startHandler}
-                  >
-                    <div className="flex items-center">
-                      {t('tutoring.buttons.start')} <FaPlay className="ml-2"/>
-                    </div>
-                  </button>
-                )}
-                <button 
-                  className={`px-6 py-2 rounded-lg transition-colors duration-200 ${
-                    micOn 
-                      ? 'bg-red-500 hover:bg-red-600 text-white' 
-                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                  }`}
-                  onClick={micHandler}
+                </div>
+              </div>
+            </div>
+
+            {/* Lesson content - scrollable */}
+            <div className="flex-1 min-h-0 overflow-auto">
+              {lesson ? (
+                <Lesson 
+                  lesson={lesson}
+                  onNextSlide={(index) => handleSlideChange(index, 'next')}
+                  onPreviousSlide={(index) => handleSlideChange(index, 'previous')}
+                />
+              ) : (
+                <div className="h-full flex justify-center items-center bg-white rounded-lg shadow-sm p-4">
+                  <p className="text-gray-600 text-sm sm:text-base text-center">
+                    {t('tutoring.freeTalk')}{' '}
+                    <Link to="/courses" className="text-blue-500 hover:text-blue-600">
+                      {t('tutoring.courses')}
+                    </Link>
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right column - Chat */}
+          <div className={`flex flex-col min-h-0 ${
+            activeTab === 'lesson' ? 'hidden lg:flex' : 'flex'
+          }`}>
+            {/* Chat messages - scrollable */}
+            <div className="flex-1 min-h-0 bg-white rounded-lg shadow-sm overflow-hidden">
+              <ChatHistory chatMessages={chatMessages} />
+            </div>
+
+            {/* Chat input - fixed height */}
+            <div className="flex-shrink-0 mt-4 bg-white rounded-lg shadow-sm p-3">
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  className="flex-1 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder={t('tutoring.inputPlaceholder')}
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                />
+                <button
+                  className="flex-shrink-0 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+                  onClick={handleSend}
                 >
-                  <div className="flex items-center"> 
-                    {t(micOn ? 'tutoring.buttons.micOff' : 'tutoring.buttons.micOn')} <FaMicrophone className="ml-2"/>
+                  <div className="flex items-center">
+                    <span className="hidden sm:inline">{t('tutoring.buttons.send')}</span>
+                    <FaPaperPlane className="sm:ml-2"/>
                   </div>
                 </button>
               </div>
             </div>
-          </div>
-
-          <div id="lesson" className="flex-grow">
-            {lesson ? (
-              <Lesson 
-                lesson={lesson}
-                onNextSlide={(index) => handleSlideChange(index, 'next')}
-                onPreviousSlide={(index) => handleSlideChange(index, 'previous')}
-              />
-            ) : (
-              <div className="flex justify-center items-center h-full bg-white rounded-lg shadow-sm p-8">
-                <p className="text-gray-600">
-                  {t('tutoring.freeTalk')}{' '}
-                  <Link to="/courses" className="text-blue-500 hover:text-blue-600">
-                    {t('tutoring.courses')}
-                  </Link>
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="w-1/3 ml-4 flex flex-col">
-          <div className="flex-grow bg-white rounded-lg shadow-sm overflow-hidden">
-            <ChatHistory chatMessages={chatMessages} />
-          </div>
-
-          <div className="mt-4 flex items-center bg-white rounded-lg shadow-sm p-3">
-            <input
-              type="text"
-              className="flex-grow px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder={t('tutoring.inputPlaceholder')}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            />
-            <button
-              className="ml-3 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
-              onClick={handleSend}
-            >
-              <div className="flex items-center">
-                {t('tutoring.buttons.send')}
-                <FaPaperPlane className="ml-2"/>
-              </div>
-            </button>
           </div>
         </div>
       </div>

@@ -15,9 +15,9 @@ const ChatHistory = ({ chatMessages }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-3 rounded-t-lg">
-        <h2 className="text-white text-lg font-semibold">
-          {t('chat.title')}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-t-lg">
+        <h2 className="text-white font-semibold">
+          {t('chat.history')}
         </h2>
       </div>
       
@@ -37,7 +37,7 @@ const ChatHistory = ({ chatMessages }) => {
             
             <div className={`max-w-[80%] rounded-lg p-3 ${
               msg.sender === 'Student'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-green-400 text-black'
                 : 'bg-gray-100 text-gray-800'
             }`}>
               <p className="whitespace-pre-wrap">{msg.message}</p>

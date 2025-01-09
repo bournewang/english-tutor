@@ -4,7 +4,7 @@ import { getCourses } from '../api/courses';
 import DashboardLayout from './DashboardLayout';
 import { getCourseHistory } from '../api/history';
 import { useTranslation } from 'react-i18next';
-
+import { FaBookOpen, FaStar } from 'react-icons/fa';
 const CoursesPage = () => {
   const { t } = useTranslation();
   const [courses, setCourses] = useState([]);
@@ -13,6 +13,7 @@ const CoursesPage = () => {
   const [courseCompleted, setCourseCompleted] = useState({});
   const [level, setLevel] = useState('A1/A2');
   const navigate = useNavigate();
+  const levels = ['A1/A2', 'B1/B2', 'C1/C2'];
 
   useEffect(() => {
     loadCourses();
@@ -56,15 +57,18 @@ const CoursesPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-4xl mx-auto p-2">
       <h1 className="text-3xl font-bold text-center mb-8">{t('courses.title')}</h1>
         {/* add a level filter */}
         <div className="flex justify-center items-center mb-4"> 
           <span className="mr-2">{t('courses.level')}: </span>
           <div className="flex">
-            <label className="mr-4" onChange={(e) => setLevel(e.target.value)} >A1/A2 <input type="radio" name="level" value="A1/A2" /></label>
-            <label className="mr-4" onChange={(e) => setLevel(e.target.value)} >B1/B2 <input type="radio" name="level" value="B1/B2" /></label>
-            <label className="mr-4" onChange={(e) => setLevel(e.target.value)} >C1/C2 <input type="radio" name="level" value="C1/C2" /></label>
+            {/* set default level to A1/A2 */}
+            {/* beautify the radio buttons */}
+            {levels.map((value) => (
+              <label className={`mr-2 ${level == value ? 'bg-blue-500 text-white' : 'bg-gray-200'} px-1 py-1 rounded-md`} key={value} onChange={(e) => setLevel(e.target.value)} >{value} <input type="radio" className="hidden" name="level" value={value} /></label>
+            ))}
+            
           </div>
         </div>
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -80,6 +84,9 @@ const CoursesPage = () => {
               {/* if course is not completed, show a running person emoji  */}
               {courseCompleted[course.id] === null && <p className="text-yellow-500"> ⏳ </p>}
               {/* {!courseCompleted[course.id] && <p className="text-gray-500"> ❌ </p>} */}
+
+              {/* show a badge icon for the level of the course */}
+              <FaStar className="text-yellow-500" />
             </li>
           ))}
         </ul>

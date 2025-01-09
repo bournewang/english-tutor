@@ -8,7 +8,7 @@ const RedirectToTutoring = () => {
 
   if (user) {
     // Redirect to tutoring page if authenticated
-    return <Navigate to="/tutoring" replace />;
+    return <Navigate to="/courses" replace />;
   }
 
   // Render login component if not authenticated

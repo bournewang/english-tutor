@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBookOpen, FaUser, FaHome } from 'react-icons/fa';
+import { FaBookOpen, FaUser, FaBars } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const Header = () => {
     }, []);
 
     return (
-        <header className="flex justify-between items-center p-4 bg-blue-600 text-white relative">
+        <header className="flex h-16 justify-between items-center p-4 bg-blue-600 text-white relative">
             <div
                 className="relative"
                 onMouseEnter={() => setMenuVisible(true)}
@@ -48,36 +48,23 @@ const Header = () => {
             </div>
             <LanguageSwitcher />
 
-            <div className="ml-6 mr-4">
-                {/* add an Icon for Learning */}
+            {/* <div className="ml-6 mr-4">
                 <div className="flex items-center cursor-pointer">
                     <FaBookOpen className="mr-2" />
                     <Link to='/tutoring'><span>{t('header.startLearning')}</span></Link>
                 </div>
-            </div>
+            </div> */}
             {user && (
             <div
-                className="relative"
+                className="relative ml-4"
                 onMouseEnter={() => setMenuVisible(true)}
             >
                 <div className="flex items-center cursor-pointer">
                     {/* choose a suitable icon for dashboard */}
-                    <FaUser className="mr-2" />
-                    <span>{t('header.dashboard')}</span>
+                    {/* <FaUser className="mr-2" /> */}
+                    {/* <span>{t('header.dashboard')}</span> */}
+                    <Link to='/dashboard'><FaBars className="mr-2" /></Link>
                 </div>
-                {menuVisible && (
-                    <div className="absolute text-center right-0 mt-2 w-48 bg-white text-black shadow-lg rounded z-10">
-                        <ul>
-                            {/* should be a link to /profile */}
-                            <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => navigate('/profile')}>{t('header.profile')}</li>
-                            {/* add other links here */}
-                            <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => navigate('/courses')}>{t('header.courses')}</li>
-                            <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => navigate('/billing')}>{t('header.billings')}</li>
-
-                            <li className="p-2 bg-red-500 text-white cursor-pointer" onClick={handleLogout}>{t('header.logout')}</li>
-                        </ul>
-                    </div>
-                )}
             </div>
             )}
             
