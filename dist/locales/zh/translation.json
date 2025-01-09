@@ -27,7 +27,24 @@
         "name": "姓名",
         "age": "年龄",
         "gender": "性别",
-        "english_level": "英语水平"
+        "english_level": "英语水平",
+        "edit": "编辑",
+        "gender_options": {
+            "M": "男",
+            "F": "女"
+        },
+        "english_level_options": {
+            "A1": "A1 - 初学者",
+            "A2": "A2 - 初级",
+            "B1": "B1 - 中级",
+            "B2": "B2 - 中高级",
+            "C1": "C1 - 高级",
+            "C2": "C2 - 精通"
+        }
+    },
+    "billing": {
+        "title": "账单",
+        "subtitle": "在这里管理您的账单并充值课程小时数。"
     },
     "home": {
         "hero": {
@@ -65,10 +82,10 @@
     "tutoring": {
         "readyPrompt": "准备好后，点击开始按钮继续。",
         "buttons": {
-          "start": "开始",
-          "end": "结束",
-          "micOn": "开启麦克风",
-          "micOff": "关闭麦克风",
+          "start": "开始练习",
+          "end": "结束练习",
+          "micOn": "开启话筒",
+          "micOff": "关闭话筒",
           "send": "发送"
         },
         "freeTalk": "自由对话，或选择一个",
@@ -157,7 +174,8 @@
         "lesson_index": "第{{index}}课"
     },
     "chat": {
-        "title": "聊天历史",
+        "title": "发送消息",
+        "history": "消息历史",
         "subtitle": "查看与AI导师的聊天历史"
     },
     "lesson": {

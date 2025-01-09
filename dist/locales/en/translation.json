@@ -30,7 +30,20 @@
         "name": "Name",
         "age": "Age",
         "gender": "Gender",
-        "english_level": "English Level"
+        "english_level": "English Level",
+        "edit": "Edit",
+        "gender_options": {
+            "M": "Male",
+            "F": "Female"
+        },
+        "english_level_options": {
+            "A1": "A1 - Beginner",
+            "A2": "A2 - Elementary",
+            "B1": "B1 - Intermediate",
+            "B2": "B2 - Upper-Intermediate",
+            "C1": "C1 - Advanced English",
+            "C2": "C2 - Proficiency English"
+        }
     },
     "home": {
         "hero": {
@@ -160,8 +173,13 @@
         "lesson_index": "Lesson {{index}}"
     },    
     "chat": {
-        "title": "Chat History",
+        "title": "Chat",
+        "history": "Chat History",
         "subtitle": "View your chat history with the AI tutor"
+    },
+    "billing": {
+        "title": "Billing",
+        "subtitle": "Manage your billing and recharge course hours here."
     },
     "lesson": {
         "title": "Lesson",
