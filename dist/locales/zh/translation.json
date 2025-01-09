@@ -1,0 +1,236 @@
+{
+    "common": {
+        "start": "开始",
+        "end": "结束",
+        "send": "发送",
+        "loading": "加载中...",
+        "error": "错误：{{message}}",
+        "save": "保存",
+        "edit": "编辑",
+        "cancel": "取消",
+        "select": "选择",
+        "other": "其他"
+    },
+    "header": {
+        "title": "英语陪练",
+        "startLearning": "开始学习",
+        "dashboard": "控制面板",
+        "profile": "个人资料",
+        "courses": "课程",
+        "billings": "账单",
+        "history": "历史",
+        "logout": "退出登录"
+    },
+    "profile": {
+        "title": "个人资料",
+        "email": "邮箱",
+        "name": "姓名",
+        "age": "年龄",
+        "gender": "性别",
+        "english_level": "英语水平"
+    },
+    "home": {
+        "hero": {
+            "title1": "通过",
+            "title2": "AI驱动的学习掌握英语",
+            "description": "通过与我们的AI导师进行互动对话来提升您的英语水平。练习口语，提高发音，在支持性的环境中建立自信。",
+            "freeTrial": "免费试用",
+            "signIn": "登录",
+            "imageAlt": "学生学习"
+        },
+        "features": {
+            "aiPowered": {
+                "title": "AI驱动学习",
+                "description": "与我们适应您水平的高级AI导师进行对话练习。"
+            },
+            "courses": {
+                "title": "结构化课程",
+                "description": "遵循我们精心设计的课程，系统地提高您的英语水平。"
+            },
+            "progress": {
+                "title": "追踪进度",
+                "description": "监控您的学习进度，查看随时间推移的进步。"
+            }
+        }
+    },
+    "footer": {
+        "tagline": "通过人工智能为全球学习者提供英语教育",
+        "quickLinks": "快速链接",
+        "aboutUs": "关于我们",
+        "contact": "联系我们",
+        "faq": "常见问题",
+        "contactUs": "联系方式",
+        "copyright": "© {{year}} 英语AI导师。保留所有权利"
+    },
+    "tutoring": {
+        "readyPrompt": "准备好后，点击开始按钮继续。",
+        "buttons": {
+          "start": "开始",
+          "end": "结束",
+          "micOn": "开启麦克风",
+          "micOff": "关闭麦克风",
+          "send": "发送"
+        },
+        "freeTalk": "自由对话，或选择一个",
+        "courses": "课程",
+        "inputPlaceholder": "输入您的消息..."
+      },
+    "login": {
+        "title": "登录",
+        "email": "邮箱",
+        "password": "密码",
+        "loginButton": "登录",
+        "noAccount": "还没有账号？",
+        "registerHere": "在此注册"
+    },
+    "register": {
+        "title": "注册",
+        "email": "邮箱",
+        "password": "密码",
+        "registerButton": "注册",
+        "haveAccount": "已有账号？",
+        "loginHere": "登录"
+    },
+    "about": {
+        "title": "关于英语AI导师",
+        "subtitle": "您的个人AI驱动英语学习伙伴，全天候在线",
+        "mission": {
+            "title": "我们的使命",
+            "description1": "我们正在通过尖端AI技术革新英语学习。我们的平台提供即时的个性化反馈，并实时适应您的学习风格。",
+            "description2": "无论您是初学者还是高级学习者，我们的AI导师都能通过自然对话、语法练习和发音练习帮助您掌握英语。",
+            "affordability": {
+                "title": "卓越品质，平民价格",
+                "description": "我们坚信，优质教育不应受经济条件的限制。通过运用AI技术的力量，我们很自豪能以远低于传统辅导的价格提供顶级学习资源。我们的使命是让高质量的英语教育大众化，使全球学习者都能享受到。"
+            },
+            "imageAlt": "AI驱动学习"
+        },
+        "values": {
+            "title": "核心价值观",
+            "innovation": {
+                "title": "创新",
+                "description": "利用先进的AI技术创造适应性强且引人入胜的学习体验"
+            },
+            "personalization": {
+                "title": "个性化",
+                "description": "根据您的独特需求和目标定制学习旅程"
+            },
+            "excellence": {
+                "title": "卓越",
+                "description": "提供高质量、研究支持的语言学习方法"
+            }
+        },
+        "team": {
+            "title": "认识我们的团队",
+            "sarah": {
+                "name": "莎拉·约翰逊博士",
+                "role": "首席执行官兼创始人",
+                "bio": "教育技术博士，拥有15年以上AI驱动学习系统经验"
+            },
+            "michael": {
+                "name": "陈明博士",
+                "role": "首席AI官",
+                "bio": "自然语言处理和机器学习领域的领先专家，拥有多项教育AI专利"
+            },
+            "emma": {
+                "name": "艾玛·罗德里格斯教授",
+                "role": "语言学主管",
+                "bio": "著名语言学家，专攻第二语言习得和认知学习"
+            }
+        }
+    },
+    "courses": {
+        "title": "课程",
+        "level": "级别",
+        "status": {
+            "completed": "✅",
+            "inProgress": "⏳"
+        }
+    },
+    "course": {
+        "error": "加载课程时出错：{{error}}",
+        "progress": "已完成 {{completed}}/{{total}} 课程",
+        "lessons": "课程内容",
+        "lesson": "课程",
+        "completed": "已完成",
+        "start": "开始学习",
+        "review": "复习课程",
+        "lesson_index": "第{{index}}课"
+    },
+    "chat": {
+        "title": "聊天历史",
+        "subtitle": "查看与AI导师的聊天历史"
+    },
+    "lesson": {
+        "title": "课程",
+        "subtitle": "查看与AI导师的课程历史",
+        "next": "下一页",
+        "previous": "上一页",
+        "finish": "完成",
+        "progress": "{{current}} / {{total}}"
+    },
+    "history": {
+        "title": "学习历史",
+        "subtitle": "查看与AI导师的学习历史"
+    },
+    "contact": {
+        "title": "联系我们",
+        "subtitle": "有问题吗？我们很乐意听取您的意见。给我们发送消息，我们会尽快回复。",
+        "getInTouch": "保持联系",
+        "email": {
+            "label": "电子邮件"
+        },
+        "hours": {
+            "label": "工作时间",
+            "value": "周一至周五：上午9点 - 下午6点（太平洋时间）"
+        },
+        "form": {
+            "name": "姓名",
+            "email": "电子邮件",
+            "subject": "主题",
+            "message": "消息",
+            "submit": "发送消息"
+        }
+    },
+    "faq": {
+        "title": "常见问题",
+        "subtitle": "查找关于我们AI英语辅导服务的常见问题解答",
+        "questions": {
+            "howWorks": {
+                "question": "AI辅导是如何运作的？",
+                "answer": "我们的AI辅导系统使用先进的自然语言处理技术与学生进行实时对话。它能适应您的学习方式，提供个性化反馈，并帮助您以自然对话的方式练习英语。"
+            },
+            "levels": {
+                "question": "支持哪些英语水平？",
+                "answer": "我们支持从初级（A1）到高级（C2）的所有水平。AI系统会自动调整语言复杂度和教学方式以匹配您当前的水平，并帮助您逐步提高。"
+            },
+            "cost": {
+                "question": "费用是多少？",
+                "answer": "10元/小时，每个人都能负担得起。"
+            },
+            "trial": {
+                "question": "订阅前可以试用吗？",
+                "answer": "可以！我们提供免费试用期，让您体验我们的AI辅导系统并评估是否适合您。试用不需要信用卡。"
+            },
+            "topics": {
+                "question": "可以练习哪些主题？",
+                "answer": "您可以练习广泛的主题，包括日常对话、商务英语、学术英语、雅思/托福备考和特定行业词汇。我们的AI导师可以适应您感兴趣的任何主题。"
+            },
+            "availability": {
+                "question": "AI是全天候可用吗？",
+                "answer": "是的，我们的AI导师全天候在线，让您可以在世界任何地方，在任何适合您的时间练习英语。"
+            },
+            "progress": {
+                "question": "如何追踪学习进度？",
+                "answer": "我们提供详细的学习分析，包括词汇量增长、语法提高、口语信心和整体熟练度水平。您可以在仪表板中查看您的进度。"
+            },
+            "speaking": {
+                "question": "可以练习口语和发音吗？",
+                "answer": "是的，我们的AI系统可以分析您的发音并提供实时反馈，帮助您提高口语技能。您可以通过与AI导师进行语音对话来练习。"
+            }
+        },
+        "stillHaveQuestions": {
+            "description": "还有问题？我们随时为您服务。",
+            "contactButton": "联系我们"
+        }
+    }
+}

@@ -1,0 +1,239 @@
+{
+    "common": {
+        "start": "Start",
+        "end": "End",
+        "send": "Send",
+        "loading": "Loading...",
+        "error": "Error: {{message}}",
+        "save": "Save",
+        "edit": "Edit",
+        "cancel": "Cancel",
+        "select": "Select",     
+        "other": "Other",
+        "history": "History",
+        "completed": "Completed",
+        "inProgress": "In Progress"
+    },
+    "header": {
+        "title": "English Tutoring",
+        "startLearning": "Start Learning",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "courses": "Courses",
+        "billings": "Billings",
+        "history": "History",
+        "logout": "Logout"
+    },
+    "profile": {
+        "title": "Profile",
+        "email": "Email",
+        "name": "Name",
+        "age": "Age",
+        "gender": "Gender",
+        "english_level": "English Level"
+    },
+    "home": {
+        "hero": {
+            "title1": "Master English with",
+            "title2": "AI-Powered Learning",
+            "description": "Transform your English skills through interactive conversations with our AI tutor. Practice speaking, improve pronunciation, and gain confidence in a supportive environment.",
+            "freeTrial": "Free Trial",
+            "signIn": "Sign In",
+            "imageAlt": "Students learning"
+        },
+        "features": {
+            "aiPowered": {
+                "title": "AI-Powered Learning",
+                "description": "Practice conversations with our advanced AI tutor that adapts to your level."
+            },
+            "courses": {
+                "title": "Structured Courses",
+                "description": "Follow our carefully designed courses to improve your English systematically."
+            },
+            "progress": {
+                "title": "Track Progress",
+                "description": "Monitor your learning progress and see your improvement over time."
+            }
+        }
+    },
+    "footer": {
+        "tagline": "Empowering learners worldwide with AI-powered English education",
+        "quickLinks": "Quick Links",
+        "aboutUs": "About Us",
+        "contact": "Contact",
+        "faq": "FAQ",
+        "contactUs": "Contact Us",
+        "copyright": "© {{year}} English AI Tutor. All rights reserved"
+    },
+    "tutoring": {
+        "readyPrompt": "When you're ready, click the start button to begin.",
+        "buttons": {
+          "start": "Start",
+          "end": "End",
+          "micOn": "Mic On",
+          "micOff": "Mic Off",
+          "send": "Send"
+        },
+        "freeTalk": "Free talk, or choose a",
+        "courses": "Course",
+        "inputPlaceholder": "Type your message..."
+    },
+    "login": {
+        "title": "Login",
+        "email": "Email",
+        "password": "Password",
+        "loginButton": "Login",
+        "noAccount": "Don't have an account?",
+        "registerHere": "Register here"
+    },
+    "register": {
+        "title": "Register",
+        "email": "Email",
+        "password": "Password",
+        "registerButton": "Register",
+        "haveAccount": "Already have an account?",
+        "loginHere": "Login"
+    },
+    "about": {
+        "title": "About English AI Tutor",
+        "subtitle": "Your personal AI-powered English learning companion, available 24/7",
+        "mission": {
+            "title": "Our Mission",
+            "description1": "We're revolutionizing English language learning through cutting-edge AI technology. Our platform provides instant, personalized feedback and adapts to your learning style in real-time.",
+            "description2": "Whether you're a beginner or advanced learner, our AI tutor helps you master English through natural conversations, grammar exercises, and pronunciation practice.",
+            "affordability": {
+                "title": "Excellence Meets Affordability",
+                "description": "We believe that exceptional education shouldn't be limited by financial barriers. By harnessing the power of AI technology, we're proud to offer premium learning resources at a fraction of traditional tutoring costs. Our mission is to democratize high-quality English education, making it accessible to learners worldwide."
+            },
+            "imageAlt": "AI-Powered Learning"
+        },
+        "values": {
+            "title": "Our Core Values",
+            "innovation": {
+                "title": "Innovation",
+                "description": "Leveraging advanced AI to create adaptive and engaging learning experiences"
+            },
+            "personalization": {
+                "title": "Personalization",
+                "description": "Tailoring the learning journey to match your unique needs and goals"
+            },
+            "excellence": {
+                "title": "Excellence",
+                "description": "Delivering high-quality, research-backed language learning methods"
+            }
+        },
+        "team": {
+            "title": "Meet Our Team",
+            "sarah": {
+                "name": "Dr. Sarah Johnson",
+                "role": "CEO & Founder",
+                "bio": "Ph.D. in Educational Technology with 15+ years of experience in AI-powered learning systems"
+            },
+            "michael": {
+                "name": "Dr. Michael Chen",
+                "role": "Chief AI Officer",
+                "bio": "Leading expert in NLP and machine learning with multiple patents in educational AI"
+            },
+            "emma": {
+                "name": "Prof. Emma Rodriguez",
+                "role": "Head of Linguistics",
+                "bio": "Renowned linguist specializing in second language acquisition and cognitive learning"
+            }
+        }
+    },
+    "courses": {
+        "title": "Courses",
+        "level": "Level",
+        "status": {
+            "completed": "✅",
+            "inProgress": "⏳"
+        }
+    },
+    "course": {
+        "error": "Error loading course: {{error}}",
+        "progress": "{{completed}} of {{total}} lessons completed",
+        "lessons": "Course Lessons",
+        "lesson": "Lesson",
+        "completed": "Completed",
+        "start": "Start Lesson",
+        "review": "Review Lesson",
+        "lesson_index": "Lesson {{index}}"
+    },    
+    "chat": {
+        "title": "Chat History",
+        "subtitle": "View your chat history with the AI tutor"
+    },
+    "lesson": {
+        "title": "Lesson",
+        "subtitle": "View your lesson history with the AI tutor",
+        "next": "Next",
+        "finish": "Finish",
+        "previous": "Previous",
+        "progress": "{{current}} / {{total}}"
+    },
+    "history": {
+        "title": "Learning History",
+        "subtitle": "View your learning history with the AI tutor"
+    },
+    "contact": {
+        "title": "Contact Us",
+        "subtitle": "Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+        "getInTouch": "Get in Touch",
+        "email": {
+            "label": "Email"
+        },
+        "hours": {
+            "label": "Business Hours",
+            "value": "Monday - Friday: 9am - 6pm PST"
+        },
+        "form": {
+            "name": "Name",
+            "email": "Email",
+            "subject": "Subject",
+            "message": "Message",
+            "submit": "Send Message"
+        }
+    },
+    "faq": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Find answers to common questions about our AI English tutoring service",
+        "questions": {
+            "howWorks": {
+                "question": "How does AI tutoring work?",
+                "answer": "Our AI tutoring system uses advanced natural language processing to engage in real-time conversations with students. It adapts to your learning style, provides personalized feedback, and helps you practice English in a natural, conversational way."
+            },
+            "levels": {
+                "question": "What levels of English proficiency do you support?",
+                "answer": "We support all levels from beginner (A1) to advanced (C2). Our AI system automatically adjusts its language complexity and teaching style to match your current level and helps you progress gradually."
+            },
+            "cost": {
+                "question": "How much does it cost?",
+                "answer": "Our pricing scheme is 9.9RMB per hour. So everyone can afford it."
+            },
+            "trial": {
+                "question": "Can I try it before subscribing?",
+                "answer": "Yes! We offer a free trial period where you can experience our AI tutoring system and evaluate if it's right for you. No credit card is required for the trial."
+            },
+            "topics": {
+                "question": "What topics can I practice?",
+                "answer": "You can practice a wide range of topics including everyday conversation, business English, academic English, IELTS/TOEFL preparation, and specific industry vocabulary. Our AI tutor can adapt to any topic you're interested in."
+            },
+            "availability": {
+                "question": "Is the AI available 24/7?",
+                "answer": "Yes, our AI tutor is available 24/7, allowing you to practice English at any time that suits your schedule, from anywhere in the world."
+            },
+            "progress": {
+                "question": "How do you track progress?",
+                "answer": "We provide detailed analytics of your learning journey, including vocabulary growth, grammar improvement, speaking confidence, and overall proficiency level. You can view your progress in your dashboard."
+            },
+            "speaking": {
+                "question": "Can I practice speaking and pronunciation?",
+                "answer": "Yes, our AI system can analyze your pronunciation and provide real-time feedback to help you improve your speaking skills. You can practice through voice conversations with the AI tutor."
+            }
+        },
+        "stillHaveQuestions": {
+            "description": "Still have questions? We're here to help.",
+            "contactButton": "Contact Us"
+        }
+    }
+}
