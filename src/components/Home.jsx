@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from './Header';
 import Footer from './Footer';
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -25,12 +28,11 @@ const Home = () => {
             <main className="pt-10 mx-auto max-w-7xl px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block xl:inline">Master English with</span>{' '}
-                  <span className="block text-blue-600 xl:inline">AI-Powered Learning</span>
+                  <span className="block xl:inline">{t('home.hero.title1')}</span>{' '}
+                  <span className="block text-blue-600 xl:inline">{t('home.hero.title2')}</span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Transform your English skills through interactive conversations with our AI tutor. 
-                  Practice speaking, improve pronunciation, and gain confidence in a supportive environment.
+                  {t('home.hero.description')}
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -38,7 +40,7 @@ const Home = () => {
                       to="/tutoring?trial=true"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
                     >
-                      Free Trial
+                      {t('home.hero.freeTrial')}
                     </Link>
                   </div>
                   <div className="mt-3 sm:mt-0 sm:ml-3">
@@ -46,7 +48,7 @@ const Home = () => {
                       to="/login"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
                     >
-                      Sign In
+                      {t('home.hero.signIn')}
                     </Link>
                   </div>
                 </div>
@@ -58,16 +60,16 @@ const Home = () => {
           <img
             className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
             src="/images/hero.jpg"
-            alt="Students learning"
+            alt={t('home.hero.imageAlt')}
           />
         </div>
       </div>
 
-      {/* Rest of your existing content */}
+      {/* Features Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Features Section */}
         <div className="mt-24">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {/* AI-Powered Learning */}
             <div className="pt-6">
               <div className="flow-root bg-gradient-to-br from-white to-blue-50 rounded-lg px-6 pb-8 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="-mt-6">
@@ -77,15 +79,16 @@ const Home = () => {
                     </svg>
                   </div>
                   <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                    AI-Powered Learning
+                    {t('home.features.aiPowered.title')}
                   </h3>
                   <p className="mt-5 text-base text-gray-500">
-                    Practice conversations with our advanced AI tutor that adapts to your level.
+                    {t('home.features.aiPowered.description')}
                   </p>
                 </div>
               </div>
             </div>
 
+            {/* Structured Courses */}
             <div className="pt-6">
               <div className="flow-root bg-gradient-to-br from-white to-blue-50 rounded-lg px-6 pb-8 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="-mt-6">
@@ -95,15 +98,16 @@ const Home = () => {
                     </svg>
                   </div>
                   <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                    Structured Courses
+                    {t('home.features.courses.title')}
                   </h3>
                   <p className="mt-5 text-base text-gray-500">
-                    Follow our carefully designed courses to improve your English systematically.
+                    {t('home.features.courses.description')}
                   </p>
                 </div>
               </div>
             </div>
 
+            {/* Track Progress */}
             <div className="pt-6">
               <div className="flow-root bg-gradient-to-br from-white to-blue-50 rounded-lg px-6 pb-8 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="-mt-6">
@@ -113,10 +117,10 @@ const Home = () => {
                     </svg>
                   </div>
                   <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                    Track Progress
+                    {t('home.features.progress.title')}
                   </h3>
                   <p className="mt-5 text-base text-gray-500">
-                    Monitor your learning progress and see your improvement over time.
+                    {t('home.features.progress.description')}
                   </p>
                 </div>
               </div>
@@ -125,7 +129,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Footer Section */}
       <Footer />
     </div>
   );
