@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import Header from './Header';
 import Footer from './Footer';
+import { useTranslation } from 'react-i18next';
 
 const DashboardLayout = ({ children }) => {
     const navigate = useNavigate();
     const { user, setUser, setToken } = useUser();
-
+    const { t } = useTranslation();
     const handleLogout = () => {
         setUser(null);
         setToken(null);
@@ -20,26 +21,26 @@ const DashboardLayout = ({ children }) => {
             { user && (
                 <nav className="w-64 bg-white shadow-md">
                     <div className="p-6">
-                        <h1 className="text-xl font-bold mb-4">Dashboard</h1>
+                        <h1 className="text-xl font-bold mb-4">{t('header.dashboard')}</h1>
                         <ul>
                             <li className="mb-2">
                                 <Link to="/profile" className="block p-2 rounded hover:bg-gray-200">
-                                    Profile
+                                    {t('header.profile')}
                                 </Link>
                             </li>
                             <li className="mb-2">
                                 <Link to="/courses" className="block p-2 rounded hover:bg-gray-200">
-                                    Courses
+                                    {t('header.courses')}
                                 </Link>
                             </li>
                             <li className="mb-2">
                                 <Link to="/billing" className="block p-2 rounded hover:bg-gray-200">
-                                    Billing
+                                    {t('header.billings')}
                                 </Link>
                             </li>
                             <li className="mb-2">
                                 <Link to="/history" className="block p-2 rounded hover:bg-gray-200">
-                                    History
+                                    {t('header.history')}
                                 </Link>
                             </li>
                             {/* <li className="mb-2">

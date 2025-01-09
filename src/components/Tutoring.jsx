@@ -1,6 +1,7 @@
 // src/components/Tutoring.js
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from './Header';
 import ChatHistory from './ChatHistory';
 import Lesson from './Lesson';
@@ -10,31 +11,24 @@ import { getLessonById } from '../api/lessons.js';
 import { createLessonHistory, createCourseHistory } from '../api/history.js';
 
 const Tutoring = () => {
-  const [chatMessages, setChatMessages] = useState([
-    // { id: 1, sender: 'Tutor', message: 'Hello! How can I help you today?' },
-  ]);
-  // 
+  const { t } = useTranslation();
+  const [chatMessages, setChatMessages] = useState([]);
   const [searchParams] = useSearchParams();
-  let lessonId = searchParams.get('lessonId');
+  const lessonId = searchParams.get('lessonId');
   const { user, setUser } = useUser();
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [micOn, setMicOn] = useState(false);
   const [lesson, setLesson] = useState(null);
   const [tutorService] = useState(() => new TutorService());
-  // the current slide index
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-
   useEffect(() => {
-    if (!lessonId) {
-      lessonId = user.current_lesson_id;
+    const currentLessonId = lessonId || user.current_lesson_id;
+    if (currentLessonId) {
+      getLessonById(currentLessonId).then(setLesson);
     }
-    console.log("lesson id: ", lessonId);
-    if (lessonId) {
-      getLessonById(lessonId).then(setLesson);
-    }
-  }, [lessonId]);
+  }, [lessonId, user.current_lesson_id]);
 
   const handleSend = () => {
     if (newMessage.trim() !== '') {
@@ -49,56 +43,50 @@ const Tutoring = () => {
     }
   };
 
-  const sendTagMessage = (tag) => {
-    setNewMessage(tag);
-    handleSend();
-  }
-
   const startHandler = async () => {
-    console.log("====== startHandler: ", lesson);
     tutorService.connectToWebsocket();
     setIsConnected(true);
-    console.log("start lesson: ", lesson);
+    
     if (lesson) {
-      console.log("send prompt after 500ms ");
       setTimeout(() => {
-        let prompt = "In this lesson we will learn " + lesson.course.name + " " + lesson.name + ". "
-          + "Let's follow the lesson plan, Unless I aske to change the topic. "
-          + "When a slide is finished, you can ask me to switch to the next slide. "
-          + "The current slide content is: " + lesson.slides[currentSlideIndex].content + ""
-          + "Do not repeat the content of the slide before you start teaching."
-          + "You can use teaching method such as role play, conversation, etc. "
-          + "You can also use the content of the slide to help you teach.";
-        if (currentSlideIndex === 0) {
-          prompt += "Now introduce yourself and start the lesson. You can start with 'Hi, ...'";
-        } else {
-          prompt += "Now continue the lesson.";
-        }
-        console.log("prompt: ", prompt);
+        const prompt = `In this lesson we will learn ${lesson.course.name} ${lesson.name}. 
+          Let's follow the lesson plan, Unless I ask to change the topic. 
+          When a slide is finished, you can ask me to switch to the next slide. 
+          The current slide content is: ${lesson.slides[currentSlideIndex].content}
+          Do not repeat the content of the slide before you start teaching.
+          You can use teaching methods such as role play, conversation, etc. 
+          You can also use the content of the slide to help you teach.
+          ${currentSlideIndex === 0 ? 'Now introduce yourself and start the lesson. You can start with "Hi, ..."' : 'Now continue the lesson.'}`;
+        
         tutorService.sendMessage(prompt);
       }, 500);
 
-      // not the last course, create a course history
       if (user.current_course_id !== lesson.course.id) {
         setTimeout(() => {
-          const result = createCourseHistory({
+          createCourseHistory({
             courseId: lesson.course.id,
             courseName: lesson.course.name,
-            completedAt: null, // not completed
+            completedAt: null,
+          }).then(result => {
+            if (result.user) setUser(result.user);
           });
-          console.log("result: ", result);
-          if (result.user) {
-            setUser(result.user);
-          }
         }, 60 * 1000);
       }
+    } else {
+      // prompt about free talk
+      setTimeout(() => {
+        const prompt = `I just want to try a free talk. 
+        If I ask questions, do not repeat the question, just answer it like a huamn talking, unless you hardly hear me.
+        Do not start with "OK, xxx", just start with "Hi, I'm ..." like a normal conversation.`;
+        tutorService.sendMessage(prompt);
+      }, 500);
     }
-  }
+  };
 
   const endHandler = () => {
     tutorService.disconnectFromWebsocket();
     setIsConnected(false);
-  }
+  };
 
   const micHandler = () => {
     if (micOn) {
@@ -107,123 +95,118 @@ const Tutoring = () => {
       tutorService.micOn();
     }
     setMicOn(!micOn);
-  }
+  };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  }
-
-  const handleNextSlide = (index) => {
-    console.log("next slide: ", index);
+  const handleSlideChange = (index, direction) => {
     setCurrentSlideIndex(index);
-    const prompt = "just for your reference, I just switched to the next slide, the content is: "
-      + lesson.slides[index].content
-      + ". You don't need to stop your conversation and start a new one, you can continue.";
+    const prompt = `just for your reference, I just switched to the ${direction} slide, the content is: 
+      ${lesson.slides[index].content}. 
+      You don't need to stop your conversation and start a new one, you can continue.`;
+    
     tutorService.sendMessage(prompt);
-
-    const newChatMessage = {
+    setChatMessages([...chatMessages, {
       id: chatMessages.length + 1,
       sender: 'Student',
-      message: "Next slide",
-    };
-    setChatMessages([...chatMessages, newChatMessage]);
-  }
-
-  const handlePreviousSlide = (index) => {
-    setCurrentSlideIndex(index);
-    const prompt = "just for your reference, I just switched to the previous slide, the content is: "
-      + lesson.slides[index].content
-      + ". You don't need to stop your conversation and start a new one, you can continue.";
-    tutorService.sendMessage(prompt);
-    console.log("previous slide: ", index);
-
-    const newChatMessage = {
-      id: chatMessages.length + 1,
-      sender: 'Student',
-      message: "Previous slide",
-    };
-    setChatMessages([...chatMessages, newChatMessage]);
-  }
+      message: `${direction} slide`,
+    }]);
+  };
 
   const finishLesson = () => {
-    console.log("finish lesson");
-    const result = createLessonHistory({
+    createLessonHistory({
       courseId: lesson.course.id,
       courseName: lesson.course.name,
       lessonId: lesson.id,
       lessonName: lesson.name,
+    }).then(result => {
+      if (result.user) setUser(result.user);
     });
-    if (result.user) {
-      setUser(result.user);
-    }
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="">
-        <Header />
-      </div>
+      <Header />
       <div className="flex-grow flex p-4 bg-gray-100 overflow-y-auto">
         <div className="w-2/3 flex flex-col">
-          {/* <h1 className="text-2xl font-bold mb-4">Tutoring Session</h1> */}
-          <div className="flex justify-center items-center mb-4">
-            <img src="/images/teacher.jpg" alt="Teacher" className="w-32 h-32 object-cover rounded-full mr-4" />
-            <div className="flex flex-col space-y-2">
-              <p className="text-gray-500 text-sm">When you ready, click the start button to continue.</p>
-              {isConnected ?
-                <button className="bg-red-500 text-white px-4 py-2 rounded w-" onClick={endHandler}>End</button>
-                :
-                <button className="bg-blue-500 text-white px-4 py-2 rounded w-" onClick={startHandler}>Start</button>
-              }
-              <button className={`px-4 py-2 rounded w- ${micOn ? 'bg-red-500 text-white' : 'bg-gray-300'}`} onClick={micHandler}>
-                {micOn ? 'Mic Off' : 'Mic On'}
-              </button>
+          <div className="flex justify-center items-center mb-4 bg-white rounded-lg p-6 shadow-sm">
+            <img 
+              src="/images/teacher.jpg" 
+              alt="Teacher" 
+              className="w-24 h-24 object-cover rounded-full mr-6 border-4 border-blue-100"
+            />
+            <div className="flex flex-col space-y-3">
+              <p className="text-gray-600">
+                {t('tutoring.readyPrompt')}
+              </p>
+              <div className="flex space-x-3">
+                {isConnected ? (
+                  <button 
+                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                    onClick={endHandler}
+                  >
+                    {t('tutoring.buttons.end')}
+                  </button>
+                ) : (
+                  <button 
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                    onClick={startHandler}
+                  >
+                    {t('tutoring.buttons.start')}
+                  </button>
+                )}
+                <button 
+                  className={`px-6 py-2 rounded-lg transition-colors duration-200 ${
+                    micOn 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                  onClick={micHandler}
+                >
+                  {t(micOn ? 'tutoring.buttons.micOff' : 'tutoring.buttons.micOn')}
+                </button>
+              </div>
             </div>
-
           </div>
 
-          {/* add a button to capture the screen */}
-          {/* <button className="bg-blue-500 text-white px-4 py-2 rounded w-1/3" onClick={captureScreen}>Capture Screen</button> */}
-          <div id="lesson" className="flex-grow overflow-y-auto border-t border-gray-300 rounded-lg p-2">
+          <div id="lesson" className="flex-grow">
             {lesson ? (
-              // <div className='h-full'>
-                <Lesson lesson={lesson} onNextSlide={handleNextSlide} onPreviousSlide={handlePreviousSlide} onFinishLesson={finishLesson} />
-              // </div>
+              <Lesson 
+                lesson={lesson}
+                onNextSlide={(index) => handleSlideChange(index, 'next')}
+                onPreviousSlide={(index) => handleSlideChange(index, 'previous')}
+                onFinishLesson={finishLesson}
+              />
             ) : (
-              <div className='flex justify-center items-center h-full'>
-                <div className="flex flex-col space-y-4">
-                  <p className="">Free talk, or choose a <Link className='text-blue-500' to="/courses">Courses</Link></p>
-                </div>
+              <div className="flex justify-center items-center h-full bg-white rounded-lg shadow-sm p-8">
+                <p className="text-gray-600">
+                  {t('tutoring.freeTalk')}{' '}
+                  <Link to="/courses" className="text-blue-500 hover:text-blue-600">
+                    {t('tutoring.courses')}
+                  </Link>
+                </p>
               </div>
             )}
           </div>
         </div>
-        <div className="w-1/3 h-full ml-4 flex flex-col">
-          {/* I want the char history container can expend by default */}
-          <div className="border bg-white flex-grow overflow-y-scroll" >
+
+        <div className="w-1/3 ml-4 flex flex-col">
+          <div className="flex-grow bg-white rounded-lg shadow-sm overflow-hidden">
             <ChatHistory chatMessages={chatMessages} />
           </div>
-          <div className="flex justify-center items-center space-x-4 hidden">
-            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a joke')}>Tell a joke</button>
-            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a poem')}>Tell a poem</button>
-            <button className="px-4 py-2 rounded w-1/3" onClick={() => sendTagMessage('tell a song')}>Tell a song</button>
-          </div>
-          <div className="mt-auto h-16 flex items-center mt-4">
+
+          <div className="mt-4 flex items-center bg-white rounded-lg shadow-sm p-3">
             <input
               type="text"
-              className="border p-2 flex-grow"
-              placeholder="Type your message..."
+              className="flex-grow px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={t('tutoring.inputPlaceholder')}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             />
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+              className="ml-3 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
               onClick={handleSend}
             >
-              Send
+              {t('tutoring.buttons.send')}
             </button>
           </div>
         </div>

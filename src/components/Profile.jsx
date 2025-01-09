@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext'; // Ensure this is correctly imported
 import { updateUser } from '../api/user'; // Ensure this is correctly imported
 import DashboardLayout from './DashboardLayout';
-
+import { useTranslation } from 'react-i18next'; 
 const ProfilePage = () => {
+  const { t } = useTranslation(); 
   const userContext = useUser(); // Call useUser at the top level
   const { user, setUser } = userContext;
 //   const [user, setUser] = useState(null);
@@ -71,22 +72,22 @@ const englishLevelOptions = [
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {!editing ? (
           <div>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Gender:</strong> {user.gender === 'M' ? 'Male' : 'Female'}</p>
-            <p><strong>Name:</strong> {user.name}</p>
-            <p><strong>Age:</strong> {user.age}</p>
-            <p><strong>English Level:</strong> {user.english_level}</p>
+            <p><strong>{t('profile.email')}:</strong> {user.email}</p>
+            <p><strong>{t('profile.gender')}:</strong> {user.gender === 'M' ? 'Male' : 'Female'}</p>
+            <p><strong>{t('profile.name')}:</strong> {user.name}</p>
+            <p><strong>{t('profile.age')}:</strong> {user.age}</p>
+            <p><strong>{t('profile.english_level')}:</strong> {user.english_level}</p>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               onClick={() => setEditing(true)}
             >
-              Edit
+              {t('common.edit')}
             </button>
           </div>
         ) : (
           <form onSubmit={handleFormSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700">Name</label>
+              <label className="block text-gray-700">{t('profile.name')}</label>
               <input
                 type="text"
                 name="name"
@@ -96,22 +97,22 @@ const englishLevelOptions = [
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Gender</label>
+              <label className="block text-gray-700">{t('profile.gender')}</label>
               <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded p-2"
               >
-                <option value="">Select Gender</option>
+                <option value="">{t('common.select')}</option>
                 {genderOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
-                <option value="O">Other</option>
+                <option value="O">{t('common.other')}</option>
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Age</label>
+              <label className="block text-gray-700">{t('profile.age')}</label>
               <input
                 type="number"
                 name="age"
@@ -122,14 +123,14 @@ const englishLevelOptions = [
             </div>
             
             <div className="mb-4">
-              <label className="block text-gray-700">English Level</label>
+              <label className="block text-gray-700">{t('profile.english_level')}</label>
               <select
                 name="english_level"
                 value={formData.english_level}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded p-2"
               >
-                <option value="">Select Level</option>
+                <option value="">{t('common.select')}</option>
                 {englishLevelOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
@@ -139,14 +140,14 @@ const englishLevelOptions = [
               type="submit"
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
             >
-              Save
+              {t('common.save')}
             </button>
             <button
               type="button"
               className="mt-4 ml-2 px-4 py-2 bg-gray-500 text-white rounded"
               onClick={() => setEditing(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </button>
           </form>
         )}

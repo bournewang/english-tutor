@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import Layout from './Layout';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,17 +31,17 @@ const Contact = () => {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-            Contact Us
+            {t('contact.title')}
           </h1>
           <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            {t('contact.subtitle')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 p-8 rounded-lg shadow-md border border-blue-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('contact.getInTouch')}</h2>
             
             <div className="space-y-6">
               <div className="flex items-start">
@@ -48,23 +51,10 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-lg font-medium text-gray-900">Email</p>
+                  <p className="text-lg font-medium text-gray-900">{t('contact.email.label')}</p>
                   <p className="text-gray-600">info@english-tutoring.org</p>
                 </div>
               </div>
-
-              {/* <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <p className="text-lg font-medium text-gray-900">Location</p>
-                  <p className="text-gray-600">San Francisco, CA</p>
-                </div>
-              </div> */}
 
               <div className="flex items-start">
                 <div className="flex-shrink-0">
@@ -73,8 +63,8 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-lg font-medium text-gray-900">Business Hours</p>
-                  <p className="text-gray-600">Monday - Friday: 9am - 6pm PST</p>
+                  <p className="text-lg font-medium text-gray-900">{t('contact.hours.label')}</p>
+                  <p className="text-gray-600">{t('contact.hours.value')}</p>
                 </div>
               </div>
             </div>
@@ -85,7 +75,7 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
+                  {t('contact.form.name')}
                 </label>
                 <input
                   type="text"
@@ -100,7 +90,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
+                  {t('contact.form.email')}
                 </label>
                 <input
                   type="email"
@@ -115,7 +105,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                  Subject
+                  {t('contact.form.subject')}
                 </label>
                 <input
                   type="text"
@@ -130,7 +120,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                  Message
+                  {t('contact.form.message')}
                 </label>
                 <textarea
                   name="message"
@@ -147,7 +137,7 @@ const Contact = () => {
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
               >
-                Send Message
+                {t('contact.form.submit')}
               </button>
             </form>
           </div>
