@@ -65,11 +65,14 @@ const Tutoring = () => {
         let prompt = "In this lesson we will learn " + lesson.course.name + " " + lesson.name + ". "
           + "Let's follow the lesson plan, Unless I aske to change the topic. "
           + "When a slide is finished, you can ask me to switch to the next slide. "
-          + "The current slide content is: " + lesson.slides[currentSlideIndex].content + "";
+          + "The current slide content is: " + lesson.slides[currentSlideIndex].content + ""
+          + "Do not repeat the content of the slide before you start teaching."
+          + "You can use teaching method such as role play, conversation, etc. "
+          + "You can also use the content of the slide to help you teach.";
         if (currentSlideIndex === 0) {
-          prompt += "Now introduce yourself and start the lesson.";
+          prompt += "Now introduce yourself and start the lesson. You can start with 'Hi, ...'";
         } else {
-          prompt += "I just lost the connection a few seconds ago, now continue the lesson.";
+          prompt += "Now continue the lesson.";
         }
         console.log("prompt: ", prompt);
         tutorService.sendMessage(prompt);
@@ -119,6 +122,13 @@ const Tutoring = () => {
       + lesson.slides[index].content
       + ". You don't need to stop your conversation and start a new one, you can continue.";
     tutorService.sendMessage(prompt);
+
+    const newChatMessage = {
+      id: chatMessages.length + 1,
+      sender: 'Student',
+      message: "Next slide",
+    };
+    setChatMessages([...chatMessages, newChatMessage]);
   }
 
   const handlePreviousSlide = (index) => {
@@ -128,6 +138,13 @@ const Tutoring = () => {
       + ". You don't need to stop your conversation and start a new one, you can continue.";
     tutorService.sendMessage(prompt);
     console.log("previous slide: ", index);
+
+    const newChatMessage = {
+      id: chatMessages.length + 1,
+      sender: 'Student',
+      message: "Previous slide",
+    };
+    setChatMessages([...chatMessages, newChatMessage]);
   }
 
   const finishLesson = () => {
@@ -141,10 +158,6 @@ const Tutoring = () => {
     if (result.user) {
       setUser(result.user);
     }
-  }
-
-  const captureScreen = () => {
-    tutorService.captureElementScreenshot('lesson');
   }
 
   return (
@@ -173,7 +186,7 @@ const Tutoring = () => {
 
           {/* add a button to capture the screen */}
           {/* <button className="bg-blue-500 text-white px-4 py-2 rounded w-1/3" onClick={captureScreen}>Capture Screen</button> */}
-          <div id="lesson" className="h-3/5 flex-grow mb-4 overflow-y-auto border-t border-gray-300 rounded-lg p-4" style={{ maxHeight: '400px' }}>
+          <div id="lesson" className="flex-grow overflow-y-auto border-t border-gray-300 rounded-lg p-2">
             {lesson ? (
               // <div className='h-full'>
                 <Lesson lesson={lesson} onNextSlide={handleNextSlide} onPreviousSlide={handlePreviousSlide} onFinishLesson={finishLesson} />
