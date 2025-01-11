@@ -79,6 +79,11 @@
         "copyright": "© {{year}} English AI Tutor. All rights reserved"
     },
     "tutoring": {
+        "remainingHours": "Remaining Hours",
+        "remainingHoursValue": "{{hours}}h",
+        "remainingHoursSubtitle": "You have {{hours}} hours left for this course.",
+        "remainingHoursTitle": "Remaining Hours",
+        "timer": "Timer",
         "readyPrompt": "When you're ready, click the start button to begin.",
         "buttons": {
           "start": "Start",

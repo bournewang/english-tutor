@@ -80,6 +80,11 @@
         "copyright": "© {{year}} 英语AI导师。保留所有权利"
     },
     "tutoring": {
+        "remainingHours": "剩余小时数",
+        "remainingHoursValue": "{{hours}}h",
+        "remainingHoursSubtitle": "您有{{hours}}小时用于此课程。",
+        "remainingHoursTitle": "剩余小时数",
+        "timer": "时长",
         "readyPrompt": "准备好后，点击开始按钮继续。",
         "buttons": {
           "start": "开始练习",
