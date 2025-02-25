@@ -37,3 +37,20 @@ export const updateCurrentCourse = async (courseId) => {
     throw error;
   }
 };
+
+// Update remaining hours
+export const updateRemainingHours = async (usedMinutes) => {
+  const response = await request('/api/hours', {
+    method: 'PUT',
+    body: JSON.stringify({ usedMinutes }),
+  });
+  return response;
+};
+
+// Get remaining hours
+export const getRemainingHours = async () => {
+  const response = await request('/api/hours', {
+    method: 'GET',
+  });
+  return response;
+};

@@ -47,13 +47,16 @@ const Lesson = ({ lesson, onNextSlide, onPreviousSlide, onFinalSlide }) => {
 
   return (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-md">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-3 sm:p-4 rounded-t-lg">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-1 sm:p-2 rounded-t-lg">
         <h1 className="text-white text-lg sm:text-xl font-bold break-words">
-          {lesson.course.name} / {lesson.name}
+          {lesson.name}
         </h1>
+        <h2 className="text-white text-sm sm:text-base">
+          {lesson.course.name}
+        </h2>
       </div>
       
-      <div className="p-3 sm:p-4 bg-blue-50 border-b border-blue-100">
+      <div className="p-1 sm:p-2 bg-blue-50 border-b border-blue-100">
         <h2 className="text-base sm:text-lg font-semibold text-blue-900">
           {slides[currentIndex].title}
         </h2>
@@ -65,9 +68,9 @@ const Lesson = ({ lesson, onNextSlide, onPreviousSlide, onFinalSlide }) => {
         dangerouslySetInnerHTML={{ __html: slides[currentIndex].content }}
       />
 
-      <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-0 sm:justify-between border-t border-gray-200 p-3 sm:p-4 bg-gray-50 rounded-b-lg">
+      <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-0 sm:justify-between border-t border-gray-200 p-1 sm:p-2 bg-gray-50 rounded-b-lg">
         <button
-          className={`w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base ${
+          className={`w-full sm:w-auto px-3 sm:px-4 py-1 rounded-lg transition-colors duration-200 text-sm sm:text-base ${
             currentIndex === 0 
               ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
               : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
@@ -94,7 +97,7 @@ const Lesson = ({ lesson, onNextSlide, onPreviousSlide, onFinalSlide }) => {
           </button>
         ) : (
           <button
-            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+            className="w-full sm:w-auto px-3 sm:px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
             onClick={handleNext}
           >
             {t('lesson.next')}

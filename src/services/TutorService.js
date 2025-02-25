@@ -17,6 +17,9 @@ export class TutorService {
         this.audioRecorder = null;
         this.isUsingTool = false;
 
+        // Add callback property
+        this.onConnectionStateChange = null;
+
         // Initialize callbacks
         // console.log = () => {console.log()};
         // this.updateAudioVisualizer = () => {};
@@ -40,6 +43,7 @@ export class TutorService {
     setupEventListeners() {
         this.client.on('open', () => {
             console.log('WebSocket connection opened', 'system');
+            this.onConnectionStateChange?.(true);
         });
 
         this.client.on('log', (log) => {
@@ -48,6 +52,8 @@ export class TutorService {
 
         this.client.on('close', (event) => {
             console.log(`WebSocket connection closed (code ${event.code})`, 'system');
+            this.disconnectFromWebsocket();
+            this.onConnectionStateChange?.(false);
         });
 
         this.client.on('audio', async (data) => {
@@ -134,19 +140,25 @@ export class TutorService {
         try {
             await this.client.connect(config);
             this.isConnected = true;
+            this.onConnectionStateChange?.(true);
             await this.resumeAudioContext();
             console.log('Connected to Gemini 2.0 Flash Multimodal Live API', 'system');
+
+            this.micOn();
         } catch (error) {
             const errorMessage = error.message || 'Unknown error';
             Logger.error('Connection error:', error);
             console.log(`Connection error: ${errorMessage}`, 'system');
             this.isConnected = false;
+            this.onConnectionStateChange?.(false);
         }
     }
 
     disconnectFromWebsocket() {
+        this.micOff();
         this.client.disconnect();
         this.isConnected = false;
+        this.onConnectionStateChange?.(false);
         if (this.audioStreamer) {
             this.audioStreamer.stop();
             if (this.audioRecorder) {

@@ -32,7 +32,7 @@ const CoursePage = () => {
 
     const loadLessonFinished = async () => {
       const lessonHistory = await getLessonHistoryByCourseId(courseId);
-      const lessonIds = lessonHistory.map(lesson => lesson.id);
+      const lessonIds = lessonHistory.map(lesson => lesson.lesson_id);
       setLessonFinished(lessonIds); 
     };
 
