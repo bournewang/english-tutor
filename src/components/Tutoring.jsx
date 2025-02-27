@@ -29,6 +29,7 @@ const Tutoring = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [sessionTime, setSessionTime] = useState(0);
   const [shouldResetTimer, setShouldResetTimer] = useState(false);
+  const [isManualDisconnect, setIsManualDisconnect] = useState(false);
 
   if (!user) {
     return (
@@ -47,17 +48,51 @@ const Tutoring = () => {
     getUserInfo().then(setUser);
   }, [lessonId, user.current_lesson_id]);
 
+  const sendInitialMessage = () => {
+    if (lesson) {
+      const prompt = `In this lesson we will learn ${lesson.course.name} ${lesson.name}. 
+        Let's follow the lesson plan, Unless I ask to change the topic. 
+        There are ${lesson.slides.length} slides in this lesson.
+        When a slide is finished, you can ask me to switch to the next slide. 
+        I will send every slide content to you.
+        Do not repeat the content of the slide before you start teaching.
+        You can use teaching methods such as role play, conversation, etc. 
+        You can also use the content of the slide to help you teach.
+        When all the slides are finished, you can ask me to finish the lesson.
+        The current slide content is: ${lesson.slides[currentSlideIndex].content}. 
+        ${currentSlideIndex === 0 ? 'Now introduce yourself and start the lesson. You can start with "Hi, ..."' : 'Now continue the lesson.'}`;
+      
+      tutorService.sendMessage(prompt);
+    } else {
+      // prompt about free talk
+      const prompt = `I just want to try a free talk. 
+      If I ask questions, do not repeat the question, just answer it like a huamn talking, unless you hardly hear me.
+      Do not start with "OK, xxx", just start with "Hi, I'm ..." like a normal conversation.`;
+      tutorService.sendMessage(prompt);
+    }
+  };
+
   useEffect(() => {
     // Set up connection state change handler
     tutorService.onConnectionStateChange = (isConnected) => {
       setIsConnected(isConnected);
+      console.log("isConnected: ", isConnected);
+      console.log("isManualDisconnect: ", isManualDisconnect);
+      if (isConnected) {
+        sendInitialMessage();
+      } else if (!isManualDisconnect) {
+        // Attempt to reconnect after a short delay if it wasn't a manual disconnect
+        setTimeout(() => {
+          tutorService.connectToWebsocket();
+        }, 3000);
+      }
     };
     
     // Clean up the callback when component unmounts
     return () => {
       tutorService.onConnectionStateChange = null;
     };
-  }, [tutorService]);
+  }, [tutorService, lesson, currentSlideIndex, isManualDisconnect]);
 
   const handleSend = () => {
     if (newMessage.trim() !== '') {
@@ -73,6 +108,7 @@ const Tutoring = () => {
   };
 
   const startHandler = async () => {
+    setIsManualDisconnect(false);
     tutorService.connectToWebsocket();
     setIsConnected(true);    
     // tutorService.micOn();
@@ -80,46 +116,21 @@ const Tutoring = () => {
     setIsTimerActive(true);
     setShouldResetTimer(true);    
     
-    if (lesson) {
+    if (lesson && user.current_course_id !== lesson.course.id) {
       setTimeout(() => {
-        const prompt = `In this lesson we will learn ${lesson.course.name} ${lesson.name}. 
-          Let's follow the lesson plan, Unless I ask to change the topic. 
-          There are ${lesson.slides.length} slides in this lesson.
-          When a slide is finished, you can ask me to switch to the next slide. 
-          I will send every slide content to you.
-          Do not repeat the content of the slide before you start teaching.
-          You can use teaching methods such as role play, conversation, etc. 
-          You can also use the content of the slide to help you teach.
-          When all the slides are finished, you can ask me to finish the lesson.
-          The current slide content is: ${lesson.slides[currentSlideIndex].content}. 
-          ${currentSlideIndex === 0 ? 'Now introduce yourself and start the lesson. You can start with "Hi, ..."' : 'Now continue the lesson.'}`;
-        
-        tutorService.sendMessage(prompt);
-      }, 500);
-
-      if (user.current_course_id !== lesson.course.id) {
-        setTimeout(() => {
-          createCourseHistory({
-            courseId: lesson.course.id,
-            courseName: lesson.course.name,
-            completedAt: null,
-          }).then(result => {
-            if (result.user) setUser(result.user);
-          });
-        }, 60 * 1000);
-      }
-    } else {
-      // prompt about free talk
-      setTimeout(() => {
-        const prompt = `I just want to try a free talk. 
-        If I ask questions, do not repeat the question, just answer it like a huamn talking, unless you hardly hear me.
-        Do not start with "OK, xxx", just start with "Hi, I'm ..." like a normal conversation.`;
-        tutorService.sendMessage(prompt);
-      }, 500);
+        createCourseHistory({
+          courseId: lesson.course.id,
+          courseName: lesson.course.name,
+          completedAt: null,
+        }).then(result => {
+          if (result.user) setUser(result.user);
+        });
+      }, 6 * 1000);
     }
   };
 
   const endHandler = async () => {
+    setIsManualDisconnect(true);
     tutorService.disconnectFromWebsocket();
     setIsConnected(false);
     // tutorService.micOff();

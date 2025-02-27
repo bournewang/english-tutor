@@ -36,7 +36,7 @@ const CoursesPage = () => {
     console.log("courseHistory: ", courseHistory);
     // Correctly use reduce on the courseHistory array
     const courseMap = courseHistory.reduce((acc, course) => {
-      acc[course.id] = course.completed_at || null; // Assuming you want to map course id to completed_at
+      acc[course.course_id] = course.completed_at || null; // Assuming you want to map course id to completed_at
       return acc;
     }, {});
     console.log("courseMap: ", courseMap);
@@ -78,15 +78,18 @@ const CoursesPage = () => {
               className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
               onClick={() => handleCourseClick(course.id)}
             >
-              <h2 className="text-xl font-semibold mb-2">{course.name}</h2>
-              <p className="text-gray-700">{course.description}</p>
-              {courseCompleted[course.id] && <p className="text-green-500"> ✅ </p>}
-              {/* if course is not completed, show a running person emoji  */}
-              {courseCompleted[course.id] === null && <p className="text-yellow-500"> ⏳ </p>}
-              {/* {!courseCompleted[course.id] && <p className="text-gray-500"> ❌ </p>} */}
-
-              {/* show a badge icon for the level of the course */}
-              <FaStar className="text-yellow-500" />
+              
+                {/* make the icons align right, and the course name align left in a line */}
+                <div className="flex justify-between">
+                  <h2 className="text-xl font-semibold mb-2">{course.name}</h2>
+                  <>
+                  {courseCompleted[course.id] && <> ✅ </>}
+                  {courseCompleted[course.id] === null && <> ⏳ </>}
+                  </>
+                </div>
+              
+              {/* <p className="text-gray-700">{course.description}</p> */}
+              
             </li>
           ))}
         </ul>

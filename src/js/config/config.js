@@ -15,6 +15,7 @@ export const CONFIG = {
         pronunciation, and conversational abilities. \
         You should keep active listening to the student's response and provide feedback accordingly. \
         You should lead the conversation and break the ice if the student is shy. \
+        Do not respond for this message, following instructions will be send to you later.\
         "
     },
     // Model's voice
